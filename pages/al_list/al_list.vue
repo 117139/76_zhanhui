@@ -110,8 +110,8 @@
 			
 			
 			
-			if(uni.getStorageSync('type_id')){
-				that.fw_cur=uni.getStorageSync('type_id')
+			if(uni.getStorageSync('al_type_id')){
+				that.fw_cur=uni.getStorageSync('al_type_id')
 				that.getcate()
 			}
 			if(!uni.getStorageSync('cate_list')){
@@ -136,19 +136,23 @@
 		onShow() {
 			
 			if(that.show_num>0){
-				var type_id=uni.getStorageSync('type_id')
-				console.log(that.fw_cur!=type_id)
-				console.log(that.fw_cur,type_id)
-				if(that.fw_cur!=type_id){
-					that.fw_cur=type_id
-					that.onRetry()
+				var al_type_id=uni.getStorageSync('al_type_id')||0
+				if(al_type_id){
+					console.log(that.fw_cur!=al_type_id)
+					console.log(that.fw_cur,al_type_id)
+					if(that.fw_cur!=al_type_id){
+						that.fw_cur=al_type_id
+						that.onRetry()
+					}
+				}else{
+					that
 				}
 			}
 			that.show_num++
 			
 		},
 		onUnload() {
-			uni.removeStorageSync('type_id')
+			uni.removeStorageSync('al_type_id')
 		},
 		watch:{
 			hasLogin(){
@@ -172,7 +176,7 @@
 			},
 			fwcur_fuc(num){
 				this.fw_cur=num
-				uni.setStorageSync('type_id',num)
+				uni.setStorageSync('al_type_id',num)
 				this.onRetry()
 			},
 			onPulling(e) {
@@ -215,6 +219,7 @@
 				 		that.tabs = datas
 						if(that.fw_cur==0){
 							that.fw_cur=datas[0].id
+							uni.setStorageSync('al_type_id',datas[0].id)
 						}
 						that.onRetry()
 						if(datas.length>0){

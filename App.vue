@@ -11,7 +11,15 @@ export default {
 	
 		that =this
 		console.log('App Launch')
-		
+		uni.getLocation({
+		    type: 'gcj02',
+		    success: function (res) {
+		        console.log('当前位置的经度：' + res.longitude);
+						uni.setStorageSync('longitude',res.longitude)
+		        console.log('当前位置的纬度：' + res.latitude);
+						uni.setStorageSync('latitude',res.latitude)
+		    }
+		});
 		// #ifndef MP-WEIXIN
 		// service.login_tel()
 		if(!uni.getStorageSync('token')){
@@ -21,7 +29,7 @@ export default {
 			that.login(loginmsg.nickname)
 			that.logindata(loginmsg)
 		}
-		// service.wxlogin('token')
+		service.login_tel('1')
 		// #endif
 		uni.getSystemInfo({
 			success: function(e) {

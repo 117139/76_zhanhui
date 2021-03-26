@@ -104,10 +104,10 @@
 				// 	})
 				// },1000)
 				// return
-				var jkurl='/user/amendInfo'
+				var jkurl='/user/update_user_info'
 				var datas={
 					token: that.loginDatas.userToken || '',
-					avatarurl:this.loginDatas_data.avatarurl,
+					avatar:this.loginDatas_data.avatar,
 					nickname:this.loginDatas_data.nickname,
 				}
 				if(this.btn_kg==1){
@@ -166,69 +166,34 @@
 			myUpload(rsp) {
 				var that = this
 				var tximg = rsp.path; //更新头像方式一
-				// Vue.set(that.loginDatas_data,'avatarurl',tximg)
-				// return
-				// #ifndef H5
-				uni.uploadFile({
-					url: service.IPurl + '/upload/streamImg', //仅为示例，非真实的接口地址
-					filePath: tximg,
-					name: 'file',
-					formData: {
-						token: that.loginDatas.userToken
-					},
-					success: (uploadFileRes) => {
-						console.log(uploadFileRes.data);
-						var ndata = JSON.parse(uploadFileRes.data)
-						if (ndata.code == 1) {
-							Vue.set(that.loginDatas_data,'avatarurl',ndata.msg)
-			
+				service.wx_upload(tximg).then(res => {
+							
+					that.btn_kg = 0
+					console.log(res)
+					if (res.code == 1) {
+						var datas = res.data.url
+						Vue.set(that.loginDatas_data,'avatar',datas)
+					} else {
+						if (res.msg) {
+							uni.showToast({
+								icon: 'none',
+								title: res.msg
+							})
+						} else {
+							uni.showToast({
+								icon: "none",
+								title: "上传失败"
+							})
 						}
 					}
-				});
-				// #endif
-				// #ifdef H5
-				uni.request({
-						url: rsp.path,
-						method: 'GET',
-						responseType: 'arraybuffer',
-						success: (res) => {
-								let base64 = wx.arrayBufferToBase64(res.data); //把arraybuffer转成base64
-								console.log('base64')
-								base64 = 'data:image/jpeg;base64,' + base64; //不加上这串字符，在页面无法显示
-								var datas={
-									file:base64,
-									type:1,
-								}
-								var jkurl='/upload/base64Img'
-								console.log('h5 upload')
-								// 单个请求
-								service.P_post(jkurl, datas).then(res => {
-									that.btn_kg=0
-									console.log(res)
-									if (res.code == 1) {
-										Vue.set(that.loginDatas_data,'avatarurl',res.msg)
-										
-									} else {
-										uni.showToast({
-											icon: "none",
-											title: "上传失败"
-										})
-									}
-								}).catch(e => {
-									that.btn_kg=0
-									console.log(e)
-									uni.showToast({
-										icon: 'none',
-										title: '获取数据失败'
-									})
-								})
-						},
-						fail: (err) => {
-							console.log(err)
-						}
-				});
-				// #endif
-				//rsp.avatar.imgSrc = rsp.path; //更新头像方式二
+				}).catch(e => {
+					that.btn_kg = 0
+					console.log(e)
+					uni.showToast({
+						icon: 'none',
+						title: '操作失败'
+					})
+				})
 			},
 			getbanner() {
 			

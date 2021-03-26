@@ -57,8 +57,25 @@
 				"enablePullDownRefresh": false
 			}
 
+		}, {
+			"path": "pages/my_dp_index/my_dp_index",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+
 		}
-	],
+	    ,{
+            "path" : "pages/my_al_list/my_al_list",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的案例",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "展会",

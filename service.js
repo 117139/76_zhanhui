@@ -243,7 +243,7 @@ const wxlogin = function(num) {
 		}
 
 		uni.request({
-			url: IPurl + '/login',
+			url: IPurl + '/login/login',
 			data: data,
 			header: {
 				'content-type': 'application/x-www-form-urlencoded'
@@ -268,8 +268,8 @@ const wxlogin = function(num) {
 				if (res.data.code == 1) {
 					console.log('登录成功')
 					console.log(res.data)
-					uni.setStorageSync('token', res.data.data.userToken)
-
+					uni.setStorageSync('token', res.data.data.token)
+					uni.setStorageSync('userId', res.data.data.id)
 					store.commit('logindata', res.data.data)
 					store.commit('login', res.data.data.nickname)
 					uni.setStorageSync('loginmsg', res.data.data)
@@ -434,13 +434,13 @@ const login_tel = function(num) {
 		datas = {
 			type:3,
 			phone: tel,
-			pwd: password
+			password: password
 		}
 	}else{
 		return
 	}
 	
-	var jkurl = '/login'
+	var jkurl = '/login/login'
 	P_post(jkurl, datas).then(res => {
 		console.log(res)
 		if (res.code == 1) {
@@ -451,9 +451,11 @@ const login_tel = function(num) {
 				datas = JSON.parse(datas)
 			}
 			console.log('登录成功')
+			uni.setStorageSync('token', res.data.token)
+			uni.setStorageSync('userId', res.data.id)
 			uni.setStorageSync('tel', tel)
 			uni.setStorageSync('password', password)
-			uni.setStorageSync('token', datas.userToken)
+			uni.setStorageSync('token', datas.token)
 			uni.setStorageSync('loginmsg', datas)
 			store.commit('logindata', datas)
 			store.commit('login', datas.nickname)

@@ -13,36 +13,10 @@
 				 @refresherabort="onAbort" @scrolltolower="getdata"> -->
 				 <view class="fl_list">
 					 <view class="pthz_li_padd" v-for="(item,i) in datas">
-						<!-- <alLi  :datas="item"></alLi> -->
-						<view class="sh_li">
-							<image class="sh_li_img" :src="getimg(item.thumbnail_img)" mode="aspectFill"></image>
-							<view class="flex_1">
-								<view class="sh_name text-cut">{{item.shop_name}}</view>
-								<view class="sh_box  dis_flex aic ju_b">
-									<view class="sh_box_add dis_flex aic">
-										<text class="iconfont icon-weizhi"></text>
-										<text class="text-cut ">{{item.address}}</text>
-									</view>
-									<view class="sh_box_tel"  @tap="call" data-tel='item.phone'>
-									
-										<text class="icon-dianhua iconfont"></text>
-									</view>
-								</view>
-								<view class="pf_list">
-									<view>{{item.avg_fraction?item.avg_fraction:0}}分</view>
-									<text v-for="(item1,index1) in item.shop_type">{{item1}}</text>
-									<!-- <text>插画师</text> -->
-								</view>
-								<view class="sh_msg">
-									<image class="sh_img" :src="getimg(item.logo)" mode="aspectFill"></image>
-									<view class="flex_1 text-cut">{{item.shop_name}}</view>
-									<text class="icnfont icon-next-m"></text>
-								</view>
-							</view>
-						</view>
+						<alLi  :datas="item"></alLi>
 					 </view>
 					
-					 <view v-if="datas.length==0" class="zanwu">暂无数据</view>
+					 <view v-if="datas.length==0" class="zanwu" style="color: #fff;">暂无数据</view>
 					 <view v-if="data_last" class="data_last">我可是有底线的哟~</view>
 				 </view>
 			<!-- </scroll-view> -->
@@ -58,13 +32,31 @@
 		mapMutations
 	} from 'vuex'
 	var that
+	var appid='wxebece1dbcc73be3d'
+	var base_url = encodeURIComponent(service.imgurl+'#/pages/index/index') // 前端域名
+	const wx_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+appid+'&redirect_uri='+base_url+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect'
+	
+	
 	export default {
 		data() {
 			return {
 				StatusBar: this.StatusBar,
 				CustomBar: this.CustomBar,
 				htmlReset:-1,
-				tabs:[],
+				tabs:[
+					{
+						name:'高一',
+						id:1,
+					},
+					{
+						name:'高二',
+						id:2,
+					},
+					{
+						name:'高三',
+						id:3,
+					},
+				],
 				fw_cur:0,
 				
 				
@@ -118,19 +110,19 @@
 			
 			
 			
-			if(uni.getStorageSync('sh_type_id')){
-				that.fw_cur=uni.getStorageSync('sh_type_id')
+			if(uni.getStorageSync('al_type_id')){
+				that.fw_cur=uni.getStorageSync('al_type_id')
 				that.getcate()
 			}
-			if(!uni.getStorageSync('sh_list')){
+			if(!uni.getStorageSync('cate_list')){
 				
 				that.getcate()
 			}else{
-				if(uni.getStorageSync('sh_list')){
-					console.log(uni.getStorageSync('sh_list'))
-					var sh_list=JSON.parse(uni.getStorageSync('sh_list'))
-					that.tabs=sh_list
-					that.fw_cur=sh_list[0].id
+				if(uni.getStorageSync('cate_list')){
+					console.log(uni.getStorageSync('cate_list'))
+					var cate_list=JSON.parse(uni.getStorageSync('cate_list'))
+					that.tabs=cate_list
+					that.fw_cur=cate_list[0].id
 					that.getcate()
 					// that.getdata()
 					// that.onRetry()
@@ -144,19 +136,23 @@
 		onShow() {
 			
 			if(that.show_num>0){
-				var type_id=uni.getStorageSync('sh_type_id')||0
-				console.log(that.fw_cur!=type_id)
-				console.log(that.fw_cur,type_id)
-				if(that.fw_cur!=type_id){
-					that.fw_cur=type_id
-					that.onRetry()
+				var al_type_id=uni.getStorageSync('al_type_id')||0
+				if(al_type_id){
+					console.log(that.fw_cur!=al_type_id)
+					console.log(that.fw_cur,al_type_id)
+					if(that.fw_cur!=al_type_id){
+						that.fw_cur=al_type_id
+						that.onRetry()
+					}
+				}else{
+					that
 				}
 			}
 			that.show_num++
 			
 		},
 		onUnload() {
-			uni.removeStorageSync('type_id')
+			uni.removeStorageSync('al_type_id')
 		},
 		watch:{
 			hasLogin(){
@@ -167,9 +163,6 @@
 		},
 		methods: {
 			...mapMutations(['login','logindata','logout','setplatform']),
-			call(e){
-				service.call(e)
-			},
 			gettime(time){
 				return service.gettime(time)
 			},
@@ -183,7 +176,7 @@
 			},
 			fwcur_fuc(num){
 				this.fw_cur=num
-				uni.setStorageSync('sh_type_id',num)
+				uni.setStorageSync('al_type_id',num)
 				this.onRetry()
 			},
 			onPulling(e) {
@@ -210,7 +203,7 @@
 				 var data = {}
 				 			
 				 //selectSaraylDetailByUserCard
-				 var jkurl = '/shops/get_shop_category'
+				 var jkurl = '/content/get_shop_case_category'
 				
 				service.P_get(jkurl, data).then(res => {
 				 	that.btn_kg = 0
@@ -226,6 +219,7 @@
 				 		that.tabs = datas
 						if(that.fw_cur==0){
 							that.fw_cur=datas[0].id
+							uni.setStorageSync('al_type_id',datas[0].id)
 						}
 						that.onRetry()
 						if(datas.length>0){
@@ -262,26 +256,22 @@
 			},
 			
 			getdata() {
-				// uni.stopPullDownRefresh()
-				// return
+				
 				///api/info/list
 				// var that = this
 				console.log(that.$store.state.loginDatas)
 				var data = {
 					token:that.$store.state.loginDatas.userToken||'',
-					order_type:uni.getStorageSync('latitude')?1:2,                       //排序类型，1：距离排序（离最近），2：评分由高到低，3：评分由低到高 非必传，默认为1
-					lat:uni.getStorageSync('latitude')||'',
-					lng:uni.getStorageSync('longitude')||'',
 					page:that.page,
 					limit:that.size,
-					shop_category_id:that.fw_cur
+					category_id:that.fw_cur
 				}
 				if(that.btn_kg==1){
 					return
 				}
 				that.btn_kg=1
 				//selectSaraylDetailByUserCard
-				var jkurl = '/shops/get_shop_list'
+				var jkurl = '/content/case_list'
 				uni.showLoading({
 					title: '正在获取数据',
 					mask:true
@@ -392,7 +382,7 @@
 		padding: 0 25upx;
 		height: 100upx;
 		position: fixed;
-		top: 0;
+		top: 44px;
 		z-index: 100;
 		background: #fff;
 	}
@@ -433,105 +423,73 @@
 		/* height: calc(100vh - 100upx); */
 		flex: 1;
 	}
-	
-	
-	
 	.fl_list{
 		width: 100%;
-		/* padding: 15upx; */
-		/* display: flex;
-		flex-wrap: wrap; */
-	}
-	.pthz_li_padd{
-		width: 100%;
-		padding: 30upx;
-	}
-	.pthz_li_padd+.pthz_li_padd{
-		border-top: 12upx solid #f6f6f6;
-	}
-	
-	
-	.sh_li{
-		width: 100%;
-		display: flex;
-	}
-	.sh_li_img{
-		width: 199upx;
-		height: 199upx;
-		border-radius: 10upx;
-		margin-right: 15upx;
-		flex:none;
-	}
-	.sh_name{
-		width: 450upx;
-		font-size: 32upx;
-		color: #333;
-		font-weight: bold;
-		margin-bottom: 20upx;
-	}
-	.sh_box{
-		width: 100%;
-	}
-	.sh_box_add{
-		font-size: 26upx;
-		color: #999;
-		width: 400upx;
-	}
-	.sh_box_tel{
-		font-size: 36upx;
-		color: #555;
-		padding-left: 30upx;
-		border-left: 1px solid #ddd;
-	}
-	.sh_box_tel .iconfont{
-		font-size: 36upx;
-		/* color: #555; */
-		color: rgb(254, 126, 19);
-	}
-	.pf_list{
-		margin-top: 10upx;
+		padding: 15upx;
 		display: flex;
 		flex-wrap: wrap;
 	}
-	.pf_list view{
-		color: #FE8018;
-		font-size: 30upx;
-		margin-right: 10upx;
+	.pthz_li_padd{
+		width: 100%;
+		padding: 15upx;
+	}
+	
+	
+	
+	.xk_li{
+		width: 100%;
+		height: 282upx;
+		background: #FFFFFF;
+		box-shadow: 0px 3px 15px 0px rgba(0, 0, 0, 0.1);
+		border-radius: 15px;
+		padding: 25upx;
+		position: relative;
+	}
+	.xk_li_tit{
+		font-size: 36upx;
 		font-weight: bold;
-		height: 36upx;
-		display: flex;
-		align-items: center;
-		margin-bottom: 10upx;
-	}
-	.pf_list text{
-		color: #DA9870;
-		font-size: 26upx;
-		margin-right: 10upx;
-		padding: 0 14upx;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: #FDEBDD;
-		height: 36upx;
-		margin-bottom: 10upx;
-	}
-	.sh_msg{
-		font-size: 22upx;
 		color: #333;
 		display: flex;
 		align-items: center;
-		margin-top: 10upx;
 	}
-	.sh_msg image{
-		width: 38upx;
-		height: 38upx;
-		border-radius: 50%;
-		margin-right: 10upx;
-		flex: none;
+	.xk_li_img{
+		width: 35upx;
+		height: 35upx;
+		margin-right: 5upx;
+		flex:none;
 	}
-	.sh_msg text{
-		font-size: 16upx;
+	.xk_li_d1{
+		font-size: 24upx;
 		color: #999;
-		flex: none;
+		display: flex;
+		align-items: center;
+		margin-top: 18upx;
+	}
+	.xk_li_d1 .xk_li_img{
+		margin-right: 22upx;
+	}
+	.xk_li_d2{
+		margin-top: 20upx;
+		height: 70upx;
+		color: #999;
+	}
+	.bm_btn{
+		font-size: 30upx;
+		color: #fff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 186upx;
+		height: 67upx;
+		background: #00B894;
+		box-shadow: 0px 3upx 18upx 0px rgba(0, 0, 0, 0.1);
+		border-radius: 34upx;
+	}
+	.bm_icon image{
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		width: 175upx;
+		height: 175upx;
 	}
 </style>

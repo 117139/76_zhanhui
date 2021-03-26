@@ -26,13 +26,15 @@
 							<image :src="getimg(item.thumbnail_img)" class="jp_img" mode="aspectFill"></image>
 							<view class="jp_msg">
 								<!-- 标题 -->
-								<view class="jp_d1 oh2">冰雪皇后的门店，共点击查看共点击查看共点击查看</view>
+								<view class="jp_d1 oh2">{{item.shop_name}}</view>
 								<!-- 手机地址 -->
 								<view class="jp_d2 dis_flex aic ju_b">
-									<text class="jp_tel">1568421541</text>
-									<view class="dis_flex aic jp_address">
+									<text class="jp_tel" @tap="call" data-tel='18300000000'>
+										<text class="icon-dianhua iconfont"></text>
+									</text>
+									<view class="dis_flex aic jp_address" style="max-width: 240upx;">
 										<text class="iconfont icon-weizhi"></text>
-										<text>{{item.address}}</text>
+										<text class="text-cut">{{item.address}}</text>
 									</view>
 								</view>
 								<!-- 标签 -->
@@ -134,6 +136,9 @@
 		},
 		methods: {
 			...mapMutations(['login', 'logindata', 'logout', 'setplatform']),
+			call(e){
+				service.call(e)
+			},
 			onRetry() {
 				this.page = 1
 				this.goods_list = []
@@ -415,9 +420,10 @@
 		margin-top: 10upx;
 		margin-bottom: 17upx;
 	}
-	.jp_tel{
-		font-size: 26upx;
-		color: #555;
+	.jp_tel .iconfont{
+		font-size: 36upx;
+		/* color: #555; */
+		color: rgb(254, 126, 19);
 	}
 	.jp_address{
 		font-size: 26upx;
