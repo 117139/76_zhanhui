@@ -220,12 +220,66 @@
 		methods: {
 			...mapMutations(['login','logindata','logout','setplatform']),
 			pj_sub(){
+				var that =this
 				uni.showModal({
 				    title: '提示',
 				    content: '是否提交当前评价？',
 				    success: function (res) {
 				        if (res.confirm) {
 				            console.log('用户点击确定');
+										uni.showLoading({
+											title:'正在提交',
+											mask:true
+										})
+										
+										var data = {
+											shop_id:that.id,
+											fraction:that.pj_lv
+										}
+										
+										//selectSaraylDetailByUserCard
+										var jkurl = '/shops/evaluate_shop'
+										// uni.showLoading({
+										// 	title: '正在获取数据'
+										// })
+										service.P_post(jkurl, data).then(res => {
+											that.btn_kg = 0
+											
+											console.log(res)
+											if (res.code == 1) {
+												var datas = res.data
+												console.log(typeof datas)
+													
+												if (typeof datas == 'string') {
+													datas = JSON.parse(datas)
+												}
+												
+												uni.showToast({
+													icon: 'none',
+													title: '提交成功'
+												})
+													
+													
+											} else {
+												if (res.msg) {
+													uni.showToast({
+														icon: 'none',
+														title: res.msg
+													})
+												} else {
+													uni.showToast({
+														icon: 'none',
+														title: '操作失败'
+													})
+												}
+											}
+										}).catch(e => {
+											console.log(e)
+											uni.showToast({
+												icon: 'none',
+												title: '获取数据失败，请检查您的网络连接'
+											})
+										})
 				        } else if (res.cancel) {
 				            console.log('用户点击取消');
 				        }

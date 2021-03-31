@@ -15,8 +15,13 @@
 			<view class="my_li dis_flex ju_b aic" @tap="jump" data-url='/pages/my_Order_list/my_Order_list' :data-login='false' :data-haslogin='hasLogin'>
 				<view>我的订单</view>
 				<text class="iconfont icon-next-m"></text>
-			</view><view class="my_li dis_flex ju_b aic">
+			</view>
+			<view class="my_li dis_flex ju_b aic"  @tap="jump" data-url='/pages/my_Order_list/my_Order_list' :data-login='false' :data-haslogin='hasLogin'>
 				<view>电话订单</view>
+				<text class="iconfont icon-next-m"></text>
+			</view>
+			<view class="my_li dis_flex ju_b aic"  @tap="jump" data-url='/pages/my_liulan/my_liulan' :data-login='false' :data-haslogin='hasLogin'>
+				<view>我的浏览</view>
 				<text class="iconfont icon-next-m"></text>
 			</view>
 			<view class="my_li dis_flex ju_b aic">
