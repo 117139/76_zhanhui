@@ -65,17 +65,65 @@
 				"navigationStyle": "custom"
 			}
 
+		}, {
+			"path": "pages/my_al_list/my_al_list",
+			"style": {
+				"navigationBarTitleText": "我的案例",
+				"enablePullDownRefresh": true
+			}
+
+		}, {
+			"path": "pages/my_team/my_team",
+			"style": {
+				"navigationBarTitleText": "我的团队",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/my_al_fabu/my_al_fabu",
+			"style": {
+				"navigationBarTitleText": "发布案例",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/my_fw_list/my_fw_list",
+			"style": {
+				"navigationBarTitleText": "我的服务",
+				"enablePullDownRefresh": true
+			}
+
+		}, {
+			"path": "pages/my_fw_fabu/my_fw_fabu",
+			"style": {
+				"navigationBarTitleText": "发布服务",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/my_Order_list/my_Order_list",
+			"style": {
+				"navigationBarTitleText": "我的订单",
+				"enablePullDownRefresh": true
+			}
+
+		}, {
+			"path": "pages/al_fw_xq/al_fw_xq",
+			"style": {
+				"navigationBarTitleText": "详情页",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/dp_xq/dp_xq",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+
 		}
-	    ,{
-            "path" : "pages/my_al_list/my_al_list",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "我的案例",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "展会",

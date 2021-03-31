@@ -143,6 +143,9 @@
 					// type:that.login_type==0?1:that.login_type==2?3:2,
 					phone: that.tel
 				}
+				if(that.login_type == -1){
+					jkurl='/user/forget_pass_send_sms'
+				}
 				service.get(jkurl, data,
 					function(res) {
 						that.btnkg = 0
@@ -256,12 +259,12 @@
 						title: '正在注册'
 					})
 				}
-				// if (that.login_type == -1) {
-				// 	jkurl = '/user/forgetVerify'
-				// 	uni.showLoading({
-				// 		title: '正在提交'
-				// 	})
-				// }
+				if (that.login_type == -1) {
+					jkurl = '/user/forget_password'
+					uni.showLoading({
+						title: '正在提交'
+					})
+				}
 				
 				
 				service.P_post(jkurl, datas).then(res => {

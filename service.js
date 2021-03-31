@@ -243,7 +243,7 @@ const wxlogin = function(num) {
 		}
 
 		uni.request({
-			url: IPurl + '/login/login',
+			url: IPurl + '/login/token_login',
 			data: data,
 			header: {
 				'content-type': 'application/x-www-form-urlencoded'

@@ -14,32 +14,8 @@
 				 <view class="fl_list">
 					 <view class="pthz_li_padd" v-for="(item,i) in datas">
 						<!-- <alLi  :datas="item"></alLi> -->
-						<view class="sh_li">
-							<image class="sh_li_img" :src="getimg(item.thumbnail_img)" mode="aspectFill"></image>
-							<view class="flex_1">
-								<view class="sh_name text-cut">{{item.shop_name}}</view>
-								<view class="sh_box  dis_flex aic ju_b">
-									<view class="sh_box_add dis_flex aic">
-										<text class="iconfont icon-weizhi"></text>
-										<text class="text-cut ">{{item.address}}</text>
-									</view>
-									<view class="sh_box_tel"  @tap="call" data-tel='item.phone'>
-									
-										<text class="icon-dianhua iconfont"></text>
-									</view>
-								</view>
-								<view class="pf_list">
-									<view>{{item.avg_fraction?item.avg_fraction:0}}分</view>
-									<text v-for="(item1,index1) in item.shop_type">{{item1}}</text>
-									<!-- <text>插画师</text> -->
-								</view>
-								<view class="sh_msg">
-									<image class="sh_img" :src="getimg(item.logo)" mode="aspectFill"></image>
-									<view class="flex_1 text-cut">{{item.shop_name}}</view>
-									<text class="icnfont icon-next-m"></text>
-								</view>
-							</view>
-						</view>
+						<shLi :datas="item"></shLi>
+						
 					 </view>
 					
 					 <view v-if="datas.length==0" class="zanwu">暂无数据</view>
@@ -120,37 +96,14 @@
 			
 			if(uni.getStorageSync('sh_type_id')){
 				that.fw_cur=uni.getStorageSync('sh_type_id')
-				that.getcate()
 			}
-			if(!uni.getStorageSync('sh_list')){
-				
-				that.getcate()
-			}else{
-				if(uni.getStorageSync('sh_list')){
-					console.log(uni.getStorageSync('sh_list'))
-					var sh_list=JSON.parse(uni.getStorageSync('sh_list'))
-					that.tabs=sh_list
-					that.fw_cur=sh_list[0].id
-					that.getcate()
-					// that.getdata()
-					// that.onRetry()
-				}else{
-					that.getcate()
-				}
-				
-			}
-			that.onRetry()
+			that.getcate()
 		},
 		onShow() {
 			
 			if(that.show_num>0){
 				var type_id=uni.getStorageSync('sh_type_id')||0
-				console.log(that.fw_cur!=type_id)
-				console.log(that.fw_cur,type_id)
-				if(that.fw_cur!=type_id){
-					that.fw_cur=type_id
-					that.onRetry()
-				}
+				that.getcate()
 			}
 			that.show_num++
 			
@@ -451,87 +404,5 @@
 	}
 	
 	
-	.sh_li{
-		width: 100%;
-		display: flex;
-	}
-	.sh_li_img{
-		width: 199upx;
-		height: 199upx;
-		border-radius: 10upx;
-		margin-right: 15upx;
-		flex:none;
-	}
-	.sh_name{
-		width: 450upx;
-		font-size: 32upx;
-		color: #333;
-		font-weight: bold;
-		margin-bottom: 20upx;
-	}
-	.sh_box{
-		width: 100%;
-	}
-	.sh_box_add{
-		font-size: 26upx;
-		color: #999;
-		width: 400upx;
-	}
-	.sh_box_tel{
-		font-size: 36upx;
-		color: #555;
-		padding-left: 30upx;
-		border-left: 1px solid #ddd;
-	}
-	.sh_box_tel .iconfont{
-		font-size: 36upx;
-		/* color: #555; */
-		color: rgb(254, 126, 19);
-	}
-	.pf_list{
-		margin-top: 10upx;
-		display: flex;
-		flex-wrap: wrap;
-	}
-	.pf_list view{
-		color: #FE8018;
-		font-size: 30upx;
-		margin-right: 10upx;
-		font-weight: bold;
-		height: 36upx;
-		display: flex;
-		align-items: center;
-		margin-bottom: 10upx;
-	}
-	.pf_list text{
-		color: #DA9870;
-		font-size: 26upx;
-		margin-right: 10upx;
-		padding: 0 14upx;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: #FDEBDD;
-		height: 36upx;
-		margin-bottom: 10upx;
-	}
-	.sh_msg{
-		font-size: 22upx;
-		color: #333;
-		display: flex;
-		align-items: center;
-		margin-top: 10upx;
-	}
-	.sh_msg image{
-		width: 38upx;
-		height: 38upx;
-		border-radius: 50%;
-		margin-right: 10upx;
-		flex: none;
-	}
-	.sh_msg text{
-		font-size: 16upx;
-		color: #999;
-		flex: none;
-	}
+	
 </style>

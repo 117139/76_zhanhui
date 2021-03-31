@@ -5,7 +5,7 @@
 				<text class="iconfont icon-prev"></text>
 			</view>
 			<view class="my_tit_box">
-				我的店铺
+				<!-- 我的店铺 -->
 			</view>
 			<view  class="header_L"></view>
 		</view>
@@ -60,7 +60,7 @@
 				</view>
 			</view>
 			<view class="dp_li_box">
-				<view class="dp_li" @tap="jump" data-url="/pages/my_team/my_team">
+				<view class="dp_li" @tap="jump" data-url="/pages/my_fw_list/my_fw_list">
 					<image class="dp_li_bg" src="/static/images/2.png" mode="aspectFill"></image>
 					<view class="dp_li_msg">
 						<image src="/static/images/myfuwu.png" mode="aspectFit"></image>
@@ -148,11 +148,66 @@
 		},
 		methods: {
 			...mapMutations(['login','logindata','logout','setplatform']),
+			getdata(){
+				// /shops/get_shop_team
+				var that =this
+				var data = {
+					shop_id:that.id
+				}
+				
+				//selectSaraylDetailByUserCard
+				var jkurl = '/shops/get_shop_team'
+				uni.showLoading({
+					title: '正在获取数据'
+				})
+				service.P_get(jkurl, data).then(res => {
+					that.btn_kg = 0
+					that.htmlReset=0
+					console.log(res)
+					if (res.code == 1) {
+						var datas = res.data
+						console.log(typeof datas)
+							
+						if (typeof datas == 'string') {
+							datas = JSON.parse(datas)
+						}
+						
+						that.datas = datas
+						console.log(datas)
+							
+							
+					} else {
+						if (res.msg) {
+							uni.showToast({
+								icon: 'none',
+								title: res.msg
+							})
+						} else {
+							uni.showToast({
+								icon: 'none',
+								title: '操作失败'
+							})
+						}
+					}
+				}).catch(e => {
+					that.btn_kg = 0
+					that.htmlReset=1
+					console.log(e)
+					uni.showToast({
+						icon: 'none',
+						title: '获取数据失败，请检查您的网络连接'
+					})
+				})
+			},
 			call(e){
 				service.call(e)
 			},
 			gettime(time){
 				return service.gettime(time)
+			},
+			getimg(img) {
+				// console.log(service.getimg(img))
+				return service.getimg(img)
 			},
 			back(){
 				uni.navigateBack({
@@ -160,7 +215,7 @@
 				})
 			},
 			sweiper_change(e){
-				console.log(e.detail.current)
+				// console.log(e.detail.current)
 				this.swp_cur=e.detail.current
 			},
 			change_swp(num){

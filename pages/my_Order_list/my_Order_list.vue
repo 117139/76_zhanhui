@@ -5,10 +5,7 @@
 			<image class="loading_def_img" src="../../static/images/loading.gif" mode=""></image>
 		</view>
 		<view v-if="htmlReset==0">
-			<scroll-view scroll-x="true" class="scroll_x list_tit">
-				<view class="list_tit_li" :class="fw_cur==item.id?' cur':''" @tap="fwcur_fuc(item.id)"
-					v-for="(item,index) in tabs">{{item.category_name}}</view>
-			</scroll-view>
+			
 			<!-- <scroll-view class="scroll_list1"   scroll-y="true" refresher-enabled='true' :refresher-triggered="triggered"
 				 :refresher-threshold="100" @refresherpulling="onPulling" @refresherrefresh="onRefresh" @refresherrestore="onRestore"
 				 @refresherabort="onAbort" @scrolltolower="getdata"> -->
@@ -17,19 +14,18 @@
 					<uni-swipe-action-item  v-for="(item,index) in datas"
 					 :options="options" @click="onClick($event,index,item.id,item)" @change="change"  :data-id='item.id'>
 					<view class="pthz_li_padd">
-						<alLi :datas="item"></alLi>
+						<shLi :datas="item"></shLi>
 					</view>
 					</uni-swipe-action-item>
 				</uni-swipe-action>
 				<view v-if="datas.length==0" class="data_null_box dis_flex_c aic ju_c">
-					<image class="data_null_img" src="../../static/images/data_null.png" mode="aspectFit"></image>
-					<view  class="data_null_text">暂无内容，赶紧发布一个吧</view>
+					<image class="data_null_img" src="/static/images/data_null.png" mode="aspectFit"></image>
+					<view  class="data_null_text">暂无内容</view>
 				</view>
 				<view v-if="data_last" class="data_last">我可是有底线的哟~</view>
 			</view>
 			<!-- </scroll-view> -->
-			<image  @tap="jump" data-url="/pages/my_al_fabu/my_al_fabu?type=about" class="my_fabu_btn" 
-			 src="/static/images/fabu_bg_03.png" mode="aspectFill"></image>
+			
 		</view>
 	</view>
 </template>
@@ -83,12 +79,6 @@
 
 
 				options: [{
-					text: '编辑',
-					style: {
-						color: '#ffffff',
-						backgroundColor: '#FE8018'
-					}
-				}, {
 					text: '删除',
 					style: {
 						color: '#ffffff',
@@ -163,9 +153,7 @@
 				// console.log('当前点击的是第'+e.index+'个按钮，点击内容是'+e.content.text)
 				if (e.index == 0) {
 					console.log(item)
-					uni.navigateTo({
-						url: '../fabu_set/fabu?id=' + id + '&type=' + item.type
-					})
+					this.sc_d_fuc(id)
 				}
 				if (e.index == 1) {
 					this.sc_d_fuc(id)
@@ -467,7 +455,6 @@
 		display: flex;
 		flex-direction: column;
 		/*  #endif  */
-		padding-top: 100upx;
 	}
 
 	.list_tit {

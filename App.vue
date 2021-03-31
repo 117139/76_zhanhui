@@ -30,6 +30,7 @@ export default {
 			that.logindata(loginmsg)
 		}
 		service.login_tel('1')
+		// service.wxlogin('token')
 		// #endif
 		uni.getSystemInfo({
 			success: function(e) {
@@ -236,6 +237,21 @@ export default {
 		width: 100%;
 		height: 9upx;
 		background: #F4F3F2;
+	}
+	.data_null_box{
+		width: 100%;
+		height: 100%;
+		min-height: 60vh;
+	}
+	.data_null_img{
+		width: 513upx;
+		height: 441upx;
+		margin-bottom: 40upx;
+	}
+	.data_null_text{
+		font-size: 30upx;;
+		font-weight: 500;
+		color: #B6B6B6;
 	}
 </style>
 

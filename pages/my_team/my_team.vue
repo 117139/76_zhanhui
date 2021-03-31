@@ -1,23 +1,10 @@
 <template>
 	<view class="minh100">
 		<view class="box_box">
-			<image class="bpx_bg" src="../../static/images/cwsj_02.jpg" mode="widthFix"></image>
 			<view class="box_main">
-				<view class="box_tit">店铺名称</view>
-				<input class="box_int" type="text" v-model="datas.shop_name" placeholder="请输入店铺名称">
-				<view class="box_tit">LOGO设置</view>
-				<view class="pz_imgs">
-					<view v-if="sj_img.length>0" class="pz_img" v-for="(item,index) in sj_img">
-						<image class="img_del" src="/static/images/img_del.png" mode="aspectFill" @tap="imgdel" :data-idx="index"
-						 data-type="1"></image>
-						<image mode="aspectFill" :src="getimg(item)" @tap="pveimg" :data-src="getimg(item)"></image>
-						<!-- <image mode="aspectFill" :src="item" @tap="pveimg" :data-src="item"></image> -->
-					</view>
-					<view class="pz_img" v-if="sj_img.length<1">
-						<image src="/static/images/upimg.png" @tap="upimg" mode="aspectFit" data-type="1"></image>
-					</view>
-				</view>
-				<view class="box_tit">店铺背景图</view>
+				<view class="box_tit">团队简介</view>
+				<textarea class="box_content" v-model="datas.detail" placeholder="输入团队简介" />
+				<view class="box_tit">团队照片</view>
 				<view class="pz_imgs">
 					<view v-if="sj_img2.length>0" class="pz_img" v-for="(item,index) in sj_img2">
 						<image class="img_del" src="/static/images/img_del.png" mode="aspectFill" @tap="imgdel" :data-idx="index"
@@ -29,38 +16,9 @@
 						<image src="/static/images/upimg.png" @tap="upimg" mode="aspectFit" data-type="2"></image>
 					</view>
 				</view>
-				<view  v-if="array" class="box_tit">服务类型</view>
-				<picker v-if="array" @change="bindPickerChange"  data-type="1" :value="fw_index" :range="array" range-key="category_name">
-					<view class="box_int ju_b">
-						<view>{{array[fw_index]?array[fw_index].category_name:'请选择服务类型'}}</view>
-						<text class="iconfont icon-next-m"></text>
-					</view>
-				</picker>
-				<view class="box_tit">店铺标签</view>
-				<input class="box_int" type="text" v-model="datas.shop_type" placeholder="请输入店铺标签">
-				<view class="box_tit">联系人姓名</view>
-				<input class="box_int" type="text" v-model="datas.user_name" placeholder="请输入联系人姓名">
-				<view class="box_tit">联系人电话</view>
-				<input class="box_int" type="number" v-model="datas.phone" placeholder="请输入联系人电话">
-				<view class="box_tit">店铺地址</view>
+			
 				
-					<view class="box_int ju_b">
-						<!-- <region-picker class="addmsg" mode="region" :jsonData="areaJson" @change="bindRegionChange" :value="region">
-								<view class="dis_flex aic" style="width: 500upx;">
-									<view class="flex_1">{{region[0]+region[1]+region[2]}}</view>
-									<text class="iconfont icon-off" ></text>
-								</view>
-								
-						</region-picker> -->
-						<view class="dis_flex aic" style="width: 500upx;">
-							<view class="flex_1 text-cut">{{datas.address?datas.address:'请选择店铺地址'}}</view>
-							<!-- <text class="iconfont icon-off" ></text> -->
-						</view>
-						<text @tap="getLocation_fuc" class="iconfont icon-adress" style="color: #4AA3FF;font-size: 35upx;"></text>
-					</view>
 				
-				<view class="box_tit">店铺简介</view>
-				<textarea class="box_content" v-model="datas.detail" placeholder="" />
 				
 				<view class="sub_btn" @tap="sub">提交</view>
 			</view>
@@ -381,30 +339,19 @@
 							that.sj_img2.push(datas)
 							newdata = that.sj_img2.length
 							var shop_banne=that.sj_img2.join(',')
-							Vue.set(that.datas,'thumbnail_img',that.sj_img2[0])
 							Vue.set(that.datas,'shop_banner',shop_banne)
-							if (newdata < 9 && i < imgs.length - 1) {
-								i++
-								that.upimg1(imgs, type, i)
-							}
 						} else {
 							that.sj_img.push(datas)
 							newdata = that.sj_img.length
 							Vue.set(that.datas,'logo',datas)
-							if (newdata < 1 && i < imgs.length - 1) {
-								i++
-								that.upimg1(imgs, type, i)
-							}
 						}
 			
 			
-						// console.log(newdata < 1)
-						// console.log(i < imgs.length - 1)
-						// console.log(newdata < 1 && i < imgs.length - 1)
-						// if (newdata < 1 && i < imgs.length - 1) {
-						// 	i++
-						// 	that.upimg1(imgs, type, i)
-						// }
+						console.log(newdata < 1 && i < imgs.length - 1)
+						if (newdata < 9 && i < imgs.length - 1) {
+							i++
+							that.upimg1(imgs, type, i)
+						}
 					} else {
 						if (res.msg) {
 							uni.showToast({
@@ -468,20 +415,14 @@
 	.box_box{
 		width: 100%;
 		position: relative;
-		padding: 150upx 30upx 0;
+		padding: 0 30upx 0;
 		
 	}
-	.bpx_bg{
-		width: 100%;
-		position: absolute;
-		top: 0;
-		left: 0;
-		z-index: 1;
-	}
+	
 	.box_main{
 		width: 100%;
 		background: #FFFFFF;
-		box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.25);
+		box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
 		border-radius: 4px;
 		position: relative;
 		z-index: 2;
@@ -555,7 +496,7 @@
 		color: #333;
 	}
 	.sub_btn{
-		margin-top: 40upx;
+		margin-top: 240upx;
 		width: 100%;
 		height: 88upx;
 		background: #FE8018;

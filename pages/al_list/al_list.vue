@@ -13,7 +13,7 @@
 				 @refresherabort="onAbort" @scrolltolower="getdata"> -->
 				 <view class="fl_list">
 					 <view class="pthz_li_padd" v-for="(item,i) in datas">
-						<alLi  :datas="item"></alLi>
+						<alLi  :datas="item"  :type="1"></alLi>
 					 </view>
 					
 					 <view v-if="datas.length==0" class="zanwu" style="color: #fff;">暂无数据</view>
@@ -112,41 +112,14 @@
 			
 			if(uni.getStorageSync('al_type_id')){
 				that.fw_cur=uni.getStorageSync('al_type_id')
-				that.getcate()
 			}
-			if(!uni.getStorageSync('cate_list')){
-				
-				that.getcate()
-			}else{
-				if(uni.getStorageSync('cate_list')){
-					console.log(uni.getStorageSync('cate_list'))
-					var cate_list=JSON.parse(uni.getStorageSync('cate_list'))
-					that.tabs=cate_list
-					that.fw_cur=cate_list[0].id
-					that.getcate()
-					// that.getdata()
-					// that.onRetry()
-				}else{
-					that.getcate()
-				}
-				
-			}
-			that.onRetry()
+			that.getcate()
 		},
 		onShow() {
 			
 			if(that.show_num>0){
 				var al_type_id=uni.getStorageSync('al_type_id')||0
-				if(al_type_id){
-					console.log(that.fw_cur!=al_type_id)
-					console.log(that.fw_cur,al_type_id)
-					if(that.fw_cur!=al_type_id){
-						that.fw_cur=al_type_id
-						that.onRetry()
-					}
-				}else{
-					that
-				}
+				that.getcate()
 			}
 			that.show_num++
 			

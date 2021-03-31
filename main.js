@@ -20,9 +20,36 @@ import uniPopup from '@/components/uni-popup/uni-popup.vue'
 Vue.component('uniPopup', uniPopup)
 import alLi from '@/components/an_li/an_li.vue'
 Vue.component('alLi', alLi)
-
+import shLi from '@/components/sh_li/sh_li.vue'
+Vue.component('shLi', shLi)
+/**
+ * @description 地址三级联动  
+ * @example   
+ * regionPicker    
+ * @author: wenxin  
+ * @createTime: 2021-3-30 08:07:16  
+ */
 import regionPicker from "@/components/region-picker/region-picker.vue"
 Vue.component('regionPicker', regionPicker)
+
+/**
+ * @description 列表侧滑  
+ * @example   
+ * <uni-swipe-action>
+ * 		<uni-swipe-action-item :options="options" @click="onClick($event,index,item.id,item)" @change="change" v-for="(item,index) in datas" :data-id='item.id'></uni-swipe-action-item>
+ * </uni-swipe-action>
+ * @author: wenxin  
+ * @createTime: 2021-3-30 08:08:33  
+ */
+import uniSwipeAction from '@/components/uni-swipe-action/uni-swipe-action.vue'
+import uniSwipeActionItem from '@/components/uni-swipe-action-item/uni-swipe-action-item.vue'
+
+Vue.component('uniSwipeAction', uniSwipeAction)
+Vue.component('uniSwipeActionItem', uniSwipeActionItem)
+
+import service from './service.js'
+Vue.mixin(service)
+
 
 Vue.config.productionTip = false
 

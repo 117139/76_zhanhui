@@ -1,23 +1,21 @@
 <template>
 	<view class="minh100">
 		<view class="box_box">
-			<image class="bpx_bg" src="../../static/images/cwsj_02.jpg" mode="widthFix"></image>
+			<!-- <image class="bpx_bg" src="../../static/images/cwsj_02.jpg" mode="widthFix"></image> -->
 			<view class="box_main">
-				<view class="box_tit">店铺名称</view>
-				<input class="box_int" type="text" v-model="datas.shop_name" placeholder="请输入店铺名称">
-				<view class="box_tit">LOGO设置</view>
-				<view class="pz_imgs">
-					<view v-if="sj_img.length>0" class="pz_img" v-for="(item,index) in sj_img">
-						<image class="img_del" src="/static/images/img_del.png" mode="aspectFill" @tap="imgdel" :data-idx="index"
-						 data-type="1"></image>
-						<image mode="aspectFill" :src="getimg(item)" @tap="pveimg" :data-src="getimg(item)"></image>
-						<!-- <image mode="aspectFill" :src="item" @tap="pveimg" :data-src="item"></image> -->
+				<view class="box_tit">案例标题</view>
+				<input class="box_int" type="text" v-model="datas.title" placeholder="请输入案例标题">
+				
+				<view  v-if="array" class="box_tit">服务类型</view>
+				<picker v-if="array" @change="bindPickerChange"  data-type="1" :value="fw_index" :range="array" range-key="category_name">
+					<view class="box_int ju_b">
+						<view>{{array[fw_index]?array[fw_index].category_name:'请选择服务类型'}}</view>
+						<text class="iconfont icon-next-m"></text>
 					</view>
-					<view class="pz_img" v-if="sj_img.length<1">
-						<image src="/static/images/upimg.png" @tap="upimg" mode="aspectFit" data-type="1"></image>
-					</view>
-				</view>
-				<view class="box_tit">店铺背景图</view>
+				</picker>
+				<view class="box_tit">案例内容</view>
+				<textarea class="box_content" v-model="datas.content" placeholder="请输入案例内容" />
+				<view class="box_tit">团队照片</view>
 				<view class="pz_imgs">
 					<view v-if="sj_img2.length>0" class="pz_img" v-for="(item,index) in sj_img2">
 						<image class="img_del" src="/static/images/img_del.png" mode="aspectFill" @tap="imgdel" :data-idx="index"
@@ -29,40 +27,9 @@
 						<image src="/static/images/upimg.png" @tap="upimg" mode="aspectFit" data-type="2"></image>
 					</view>
 				</view>
-				<view  v-if="array" class="box_tit">服务类型</view>
-				<picker v-if="array" @change="bindPickerChange"  data-type="1" :value="fw_index" :range="array" range-key="category_name">
-					<view class="box_int ju_b">
-						<view>{{array[fw_index]?array[fw_index].category_name:'请选择服务类型'}}</view>
-						<text class="iconfont icon-next-m"></text>
-					</view>
-				</picker>
-				<view class="box_tit">店铺标签</view>
-				<input class="box_int" type="text" v-model="datas.shop_type" placeholder="请输入店铺标签">
-				<view class="box_tit">联系人姓名</view>
-				<input class="box_int" type="text" v-model="datas.user_name" placeholder="请输入联系人姓名">
-				<view class="box_tit">联系人电话</view>
-				<input class="box_int" type="number" v-model="datas.phone" placeholder="请输入联系人电话">
-				<view class="box_tit">店铺地址</view>
 				
-					<view class="box_int ju_b">
-						<!-- <region-picker class="addmsg" mode="region" :jsonData="areaJson" @change="bindRegionChange" :value="region">
-								<view class="dis_flex aic" style="width: 500upx;">
-									<view class="flex_1">{{region[0]+region[1]+region[2]}}</view>
-									<text class="iconfont icon-off" ></text>
-								</view>
-								
-						</region-picker> -->
-						<view class="dis_flex aic" style="width: 500upx;">
-							<view class="flex_1 text-cut">{{datas.address?datas.address:'请选择店铺地址'}}</view>
-							<!-- <text class="iconfont icon-off" ></text> -->
-						</view>
-						<text @tap="getLocation_fuc" class="iconfont icon-adress" style="color: #4AA3FF;font-size: 35upx;"></text>
-					</view>
 				
-				<view class="box_tit">店铺简介</view>
-				<textarea class="box_content" v-model="datas.detail" placeholder="" />
-				
-				<view class="sub_btn" @tap="sub">提交</view>
+				<view class="sub_btn" @tap="sub">发布</view>
 			</view>
 		</view>
 	</view>
@@ -90,18 +57,10 @@
 				region: ['北京市', '北京', '东城区'],
 				areaJson:{},
 				datas:{
-					shop_name:'',        //	是	string	店铺名称
-					logo:'',             //	是	string	logo
-					thumbnail_img:'',    //	是	string	商户缩略图
-					shop_banner:'',       //	是	array	店铺背景图（一维数组）
-					shop_category_id:'', //	是	string	服务类型
-					shop_type:'',        //	是	array	店铺标签（一维数组）
-					user_name:'',        //	是	string	联系人姓名
-					phone:'',            //	是	string	联系人电话
-					address:'',          //	是	string	店铺地址
-					lats:'',             //	是	string	经度
-					lngs:'',             //	是	string	纬度
-					detail:'',           //	是	string	店铺简介
+					category_id:'',      //	是	string	案例类型ID
+					title:'',      //	是	string	标题
+					thumbnail_img:'',      //	是	string	案例缩略图
+					content:'',      //	是	string	案例内容
 				}
 			}
 		},
@@ -151,14 +110,14 @@
 				var datas=e.currentTarget.dataset
 				if(datas.type==1){
 					that.fw_index=e.detail.value
-					Vue.set(that.datas,'shop_category_id',that.array[that.fw_index].id)
+					Vue.set(that.datas,'category_id',that.array[that.fw_index].id)
 				}
 			},
 			getcate(){
 				 var data = {}
 				 			
 				 //selectSaraylDetailByUserCard
-				 var jkurl = '/content/get_shop_service_category'
+				 var jkurl = '/content/get_shop_case_category'
 				
 				service.P_post(jkurl, data).then(res => {
 				 	that.btn_kg = 0
@@ -172,7 +131,7 @@
 				 		}
 				 			
 				 		that.array=datas
-						Vue.set(that.datas,'shop_category_id',that.array[0].id)
+						Vue.set(that.datas,'category_id',that.array[0].id)
 				 		console.log(datas)
 				 			
 				 			
@@ -245,15 +204,9 @@
 				})
 			},
 			sub(){
-				if (!that.datas.phone) {
-					uni.showToast({
-						icon: 'none',
-						title: '请输入联系人电话'
-					});
-					return;
-				}
+				
 				///user/residence_info
-				var jkurl="/user/user_residence"
+				var jkurl="/content/add_case"
 				if(that.btn_kg==1){
 					return
 					
@@ -279,22 +232,9 @@
 						})
 						setTimeout(function(){
 							// that.show_tk=true
-							that.datas={
-								shop_name:'',        //	是	string	店铺名称
-								logo:'',             //	是	string	logo
-								thumbnail_img:'',    //	是	string	商户缩略图
-								shop_banner:'',       //	是	array	店铺背景图（一维数组）
-								shop_category_id:'', //	是	string	服务类型
-								shop_type:'',        //	是	array	店铺标签（一维数组）
-								user_name:'',        //	是	string	联系人姓名
-								phone:'',            //	是	string	联系人电话
-								address:'',          //	是	string	店铺地址
-								lats:'',             //	是	string	经度
-								lngs:'',             //	是	string	纬度
-								detail:'',           //	是	string	店铺简介
-							}
-							that.sj_img=''
-							that.sj_img2=''
+							uni.navigateBack({
+								delta:1
+							})
 						},1000)
 							
 							
@@ -381,8 +321,8 @@
 							that.sj_img2.push(datas)
 							newdata = that.sj_img2.length
 							var shop_banne=that.sj_img2.join(',')
-							Vue.set(that.datas,'thumbnail_img',that.sj_img2[0])
-							Vue.set(that.datas,'shop_banner',shop_banne)
+							Vue.set(that.datas,'thumbnail_img',shop_banne)
+							// Vue.set(that.datas,'shop_banner',shop_banne)
 							if (newdata < 9 && i < imgs.length - 1) {
 								i++
 								that.upimg1(imgs, type, i)
@@ -447,8 +387,8 @@
 								that.sj_img2.splice(datas.idx, 1)
 								var shop_banne=that.sj_img2.join(',')
 								var thum=that.sj_img2[0]||''
-								Vue.set(that.datas,'thumbnail_img',thum)
-								Vue.set(that.datas,'shop_banner',shop_banne)
+								Vue.set(that.datas,'thumbnail_img',shop_banne)
+								// Vue.set(that.datas,'shop_banner',shop_banne)
 							} else {
 								that.sj_img.splice(datas.idx, 1)
 								Vue.set(that.datas,'logo','')
@@ -468,7 +408,7 @@
 	.box_box{
 		width: 100%;
 		position: relative;
-		padding: 150upx 30upx 0;
+		padding: 0upx 30upx 0;
 		
 	}
 	.bpx_bg{

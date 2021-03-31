@@ -29,7 +29,7 @@
 								<view class="jp_d1 oh2">{{item.shop_name}}</view>
 								<!-- 手机地址 -->
 								<view class="jp_d2 dis_flex aic ju_b">
-									<text class="jp_tel" @tap="call" data-tel='18300000000'>
+									<text class="jp_tel" @tap="call" :data-tel='item.phone'>
 										<text class="icon-dianhua iconfont"></text>
 									</text>
 									<view class="dis_flex aic jp_address" style="max-width: 240upx;">

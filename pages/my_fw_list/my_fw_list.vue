@@ -17,7 +17,7 @@
 					<uni-swipe-action-item  v-for="(item,index) in datas"
 					 :options="options" @click="onClick($event,index,item.id,item)" @change="change"  :data-id='item.id'>
 					<view class="pthz_li_padd">
-						<alLi :datas="item"></alLi>
+						<alLi :datas="item" :type="2"></alLi>
 					</view>
 					</uni-swipe-action-item>
 				</uni-swipe-action>
@@ -28,7 +28,7 @@
 				<view v-if="data_last" class="data_last">我可是有底线的哟~</view>
 			</view>
 			<!-- </scroll-view> -->
-			<image  @tap="jump" data-url="/pages/my_al_fabu/my_al_fabu?type=about" class="my_fabu_btn" 
+			<image  @tap="jump" data-url="/pages/my_fw_fabu/my_fw_fabu?type=about" class="my_fabu_btn" 
 			 src="/static/images/fabu_bg_03.png" mode="aspectFill"></image>
 		</view>
 	</view>
@@ -132,8 +132,6 @@
 		onLoad(option) {
 			that = this
 			that.htmlReset = 0
-
-
 
 			that.getcate()
 		},
@@ -299,7 +297,7 @@
 				var data = {}
 
 				//selectSaraylDetailByUserCard
-				var jkurl = '/content/get_shop_case_category'
+				var jkurl = '/content/get_shop_service_category'
 
 				service.P_get(jkurl, data).then(res => {
 					that.btn_kg = 0
@@ -317,7 +315,6 @@
 							that.fw_cur = datas[0].id
 						}
 						that.onRetry()
-						
 
 						console.log(datas)
 
@@ -363,7 +360,7 @@
 				}
 				that.btn_kg = 1
 				//selectSaraylDetailByUserCard
-				var jkurl = '/content/user_case_list'
+				var jkurl = '/content/user_service_list'
 				uni.showLoading({
 					title: '正在获取数据',
 					mask: true
