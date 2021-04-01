@@ -12,19 +12,19 @@
     <view class="my_list">
 			<image class="my_list_sj" @tap="jump" data-url='/pages/cwsj/cwsj'  :data-login='false' :data-haslogin='hasLogin' src="../../static/images/cwsj_03.png" mode="widthFix"></image>
 			<image class="my_list_sj" @tap="jump" data-url='/pages/my_dp_index/my_dp_index'  :data-login='false' :data-haslogin='hasLogin' src="../../static/images/cwsj1_03.png" mode="widthFix"></image>
-			<view class="my_li dis_flex ju_b aic" @tap="jump" data-url='/pages/my_Order_list/my_Order_list' :data-login='false' :data-haslogin='hasLogin'>
+			<view class="my_li dis_flex ju_b aic" @tap="jump" data-url='/pages/my_Order_list/my_Order_list' :data-login='true' :data-haslogin='hasLogin'>
 				<view>我的订单</view>
 				<text class="iconfont icon-next-m"></text>
 			</view>
-			<view class="my_li dis_flex ju_b aic"  @tap="jump" data-url='/pages/my_Order_list/my_Order_list' :data-login='false' :data-haslogin='hasLogin'>
+			<view class="my_li dis_flex ju_b aic"  @tap="jump" data-url='/pages/my_Order_list/my_Order_list' :data-login='true' :data-haslogin='hasLogin'>
 				<view>电话订单</view>
 				<text class="iconfont icon-next-m"></text>
 			</view>
-			<view class="my_li dis_flex ju_b aic"  @tap="jump" data-url='/pages/my_liulan/my_liulan' :data-login='false' :data-haslogin='hasLogin'>
+			<view class="my_li dis_flex ju_b aic"  @tap="jump" data-url='/pages/my_liulan/my_liulan?type=1' :data-login='true' :data-haslogin='hasLogin'>
 				<view>我的浏览</view>
 				<text class="iconfont icon-next-m"></text>
 			</view>
-			<view class="my_li dis_flex ju_b aic">
+			<view class="my_li dis_flex ju_b aic" @tap="jump" data-url='/pages/my_liulan/my_liulan?type=2' :data-login='true' :data-haslogin='hasLogin'>
 				<view>我的评价</view>
 				<text class="iconfont icon-next-m"></text>
 			</view>

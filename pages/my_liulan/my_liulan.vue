@@ -86,7 +86,8 @@
 						color: '#ffffff',
 						backgroundColor: '#F86060'
 					}
-				}]
+				}],
+				list_type:1
 			}
 		},
 		computed: {
@@ -125,7 +126,14 @@
 			that = this
 			that.htmlReset = 0
 
-
+			if(option.type){
+				that.list_type=option.type
+			}
+			if(option.type==2){
+				uni.setNavigationBarTitle({
+					title:'我的评价'
+				})
+			}
 
 			that.getcate()
 		},

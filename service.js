@@ -158,7 +158,7 @@ const jump = function(e) {
 			// #endif
 			// #ifndef MP-WEIXIN
 			uni.navigateTo({
-				url: '/pagesA/pc_login/pc_login'
+				url: '/pages/login/login'
 			})
 			// #endif
 			return
