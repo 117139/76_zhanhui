@@ -216,6 +216,41 @@ const call = function(e) {
 			content: '是否拨打' + e.currentTarget.dataset.tel + '?',
 			success: function(res) {
 				if (res.confirm) {
+					///shops/phone_buy
+					var jkurl = '/shops/phone_buy'
+					var datas={
+						phone:e.currentTarget.dataset.tel
+					}
+					P_post(jkurl, datas).then(res => {
+						console.log(res)
+						if (res.code == 1) {
+							var datas = res.data
+							console.log(typeof datas)
+					
+							if (typeof datas == 'string') {
+								datas = JSON.parse(datas)
+							}
+							
+						} else {
+							if (res.msg) {
+								uni.showToast({
+									icon: 'none',
+									title: res.msg
+								})
+							} else {
+								uni.showToast({
+									icon: 'none',
+									title: '操作失败'
+								})
+							}
+						}
+					}).catch(e => {
+						console.log(e)
+						uni.showToast({
+							icon: 'none',
+							title: '操作失败'
+						})
+					})
 					wx.makePhoneCall({
 						phoneNumber: e.currentTarget.dataset.tel + ''
 					})
@@ -706,7 +741,7 @@ const http = ({
 						// #endif
 						// #ifndef MP-WEIXIN
 						uni.navigateTo({
-							url: '/pagesA/pc_login/pc_login'
+							url: '/pages/login/login'
 						})
 						// #endif
 						return
@@ -718,7 +753,7 @@ const http = ({
 						// #endif
 						// #ifndef MP-WEIXIN
 						uni.navigateTo({
-							url: '/pagesA/pc_login/pc_login'
+							url: '/pages/login/login'
 						})
 						// #endif
 						return
@@ -815,15 +850,22 @@ const P_delete = (url, param = {}) => {
 // }).catch(e => {
 //   console.log(e)
 // })
-const getimg = function(img) {
+const getimg = function(img,type) {
 	// return img
 
 
 
 	if (!img) return
+	if (!type) {
+		type = ','
+	}
+	if(type!='arr'){
+		
+		img = img.split(type)
+	}
 	// console.log(imgurl+img)
-	if (img.indexOf('://') == -1) {
-		img = imgurl + img
+	if (img[0].indexOf('://') == -1) {
+		img = imgurl + img[0]
 	}
 	return img
 }

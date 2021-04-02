@@ -164,7 +164,7 @@
 				if (e.index == 0) {
 					console.log(item)
 					uni.navigateTo({
-						url: '../fabu_set/fabu?id=' + id + '&type=' + item.type
+						url: '/pages/my_al_fabu/my_al_fabu?id=' + id
 					})
 				}
 				if (e.index == 1) {
@@ -178,62 +178,61 @@
 				var that = this
 				uni.showModal({
 				    title: '提示',
-				    content: '确定删除该房源吗？',
+				    content: '确定删除该案例吗？',
 				    success: function (res) {
 				        if (res.confirm) {
 				            console.log('用户点击确定');
-										var data = {
-											ids: id,
-											token: that.loginDatas.token,
-										}
-										console.log(data)
-										// return
-										//selectSaraylDetailByUserCard
-										var jkurl = '/api/my/issueDelete'
+							var datas = {
+								id: id,
+								// token: that.loginDatas.token,
+							}
+							console.log(datas)
+							// return
+							//selectSaraylDetailByUserCard
+							var jkurl = '/content/del_content'
+							service.P_post(jkurl, datas).then(res => {
+								that.btn_kg = 0
+								console.log(res)
+								if (res.code == 1) {
+									var datas = res.data
+									console.log(typeof datas)
+										
+									if (typeof datas == 'string') {
+										datas = JSON.parse(datas)
+									}
+									uni.showToast({
+										icon: 'none',
+										title: '操作成功'
+									})
+									setTimeout(()=>{
+										
+									that.onRetry()
+									},1000)
 										
 										
-										service.post(jkurl, data,
-											function(res) {
-										
-												// if (res.data.code == 1) {
-												if (res.data.code == 1) {
-										
-										
-										
-										
-													uni.showToast({
-														icon: 'none',
-														title: '操作成功'
-													})
-													that.page = 1
-													that.getdata()
-													that.btnkg = 0
-										
-												} else {
-													that.btnkg = 0
-													if (res.data.msg) {
-														uni.showToast({
-															icon: 'none',
-															title: res.data.msg
-														})
-													} else {
-														uni.showToast({
-															icon: 'none',
-															title: '操作失败'
-														})
-													}
-												}
-											},
-											function(err) {
-												that.btnkg = 0
-										
-												uni.showToast({
-													icon: 'none',
-													title: '获取数据失败'
-												})
-										
-											}
-										)
+								} else {
+									if (res.msg) {
+										uni.showToast({
+											icon: 'none',
+											title: res.msg
+										})
+									} else {
+										uni.showToast({
+											icon: 'none',
+											title: '操作失败'
+										})
+									}
+								}
+							}).catch(e => {
+								that.btn_kg = 0
+								console.log(e)
+								uni.showToast({
+									icon: 'none',
+									title: '获取数据失败'
+								})
+							})
+							
+							
 				        } else if (res.cancel) {
 				            console.log('用户点击取消');
 				        }
@@ -529,7 +528,7 @@
 
 	.pthz_li_padd {
 		width: 100%;
-		padding: 15upx;
+		padding:0 15upx;
 	}
 
 

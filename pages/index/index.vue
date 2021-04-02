@@ -17,11 +17,11 @@
 			<view class="jp_box">
 				<view class="jp_tit">
 					<view class="jp_tit_tit">精品商户</view>
-					<view class="jp_tit_more">更多<text class="iconfont icon-next-m"></text></view>
+					<view class="jp_tit_more" @tap="jump_more(1)">更多<text class="iconfont icon-next-m"></text></view>
 				</view>
 				<scroll-view scroll-x="true" class="jp_list_box scroll_x">
 					<view class="jp_list">
-						<view v-for="(item,index) in shopList" :key='index' class="jp_li" @click="toShopDetail(item.id)">
+						<view v-for="(item,index) in shopList" :key='index' class="jp_li"  @tap="jump" :data-url="'/pages/dp_xq/dp_xq?id='+item.id">
 							<!-- 图片 -->
 							<image :src="getimg(item.thumbnail_img)" class="jp_img" mode="aspectFill"></image>
 							<view class="jp_msg">
@@ -29,7 +29,7 @@
 								<view class="jp_d1 oh2">{{item.shop_name}}</view>
 								<!-- 手机地址 -->
 								<view class="jp_d2 dis_flex aic ju_b">
-									<text class="jp_tel" @tap="call" :data-tel='item.phone'>
+									<text class="jp_tel" @tap.stop="call" :data-tel='item.phone'>
 										<text class="icon-dianhua iconfont"></text>
 									</text>
 									<view class="dis_flex aic jp_address" style="max-width: 240upx;">
@@ -57,7 +57,7 @@
 			<view class="jp_box">
 				<view class="jp_tit">
 					<view class="jp_tit_tit">精品案例</view>
-					<view class="jp_tit_more">更多<text class="iconfont icon-next-m"></text></view>
+					<view class="jp_tit_more" @tap="jump_more(2)">更多<text class="iconfont icon-next-m"></text></view>
 				</view>
 				<alLi v-for="(item,i) in caseList" :datas="item"></alLi>
 				<!-- <view class="dis_flex ju_b al_li" v-for="(item,i) in caseList">
@@ -138,6 +138,18 @@
 			...mapMutations(['login', 'logindata', 'logout', 'setplatform']),
 			call(e){
 				service.call(e)
+			},
+			jump_more(num){
+				if(num==1){
+					uni.switchTab({
+						url:'/pages/sh_list/sh_list'
+					})
+				}
+				if(num==2){
+					uni.switchTab({
+						url:'/pages/al_list/al_list'
+					})
+				}
 			},
 			onRetry() {
 				this.page = 1

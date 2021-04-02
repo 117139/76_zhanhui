@@ -100,7 +100,8 @@
 				</view>
 			</view>
 		</view>
-		<view class="xq_box">
+		<!-- //评价状态，0：可评价，1：不可评价 -->
+		<view class="xq_box" v-if="datas.evaluate_status==0">
 			<view class="xq_box xq_box1 dis_flex aic ju_b">
 				<view class="dis_flex aic pj_lv">
 					评价
@@ -258,8 +259,9 @@
 													icon: 'none',
 													title: '提交成功'
 												})
-													
-													
+												setTimeout(()=>{
+													that.getdata()
+												},1000)
 											} else {
 												if (res.msg) {
 													uni.showToast({

@@ -1,30 +1,38 @@
 <template>
 	<view class="minh100">
-    <view class="my_box dis_flex aic  ju_c">
-			<view v-if="hasLogin" class="my_box1 dis_flex aic ju_c"  @tap="jump" data-url='/pages/my_msg/my_msg'  :data-login='false' :data-haslogin='hasLogin'>
+		<view class="my_box dis_flex aic  ju_c">
+			<view v-if="hasLogin" class="my_box1 dis_flex aic ju_c" @tap="jump" data-url='/pages/my_msg/my_msg'
+				:data-login='false' :data-haslogin='hasLogin'>
 				<!-- <text class="iconfont icon-sangedian my_set" @tap="jump" data-url='/pages/my_msg/my_msg'  :data-login='false' :data-haslogin='hasLogin'></text> -->
 				<image class="user_tximg" :src="getimg(loginDatas.avatar)" mode="aspectFill"></image>
 				<view class="user_name flex_1">{{loginDatas.nickname}}</view>
 				<text class="iconfont icon-next-m go_my"></text>
 			</view>
 			<view v-else class="user_name" @tap="jump" data-url='/pages/login/login'>登录/注册</view>
-    </view>
-    <view class="my_list">
-			<image class="my_list_sj" @tap="jump" data-url='/pages/cwsj/cwsj'  :data-login='false' :data-haslogin='hasLogin' src="../../static/images/cwsj_03.png" mode="widthFix"></image>
-			<image class="my_list_sj" @tap="jump" data-url='/pages/my_dp_index/my_dp_index'  :data-login='false' :data-haslogin='hasLogin' src="../../static/images/cwsj1_03.png" mode="widthFix"></image>
-			<view class="my_li dis_flex ju_b aic" @tap="jump" data-url='/pages/my_Order_list/my_Order_list' :data-login='true' :data-haslogin='hasLogin'>
+		</view>
+		<view class="my_list">
+			<image v-if="loginDatas.status==2" class="my_list_sj" @tap="jump" data-url='/pages/my_dp_index/my_dp_index' :data-login='false'
+				:data-haslogin='hasLogin' src="../../static/images/cwsj1_03.png" mode="widthFix"></image>
+			<image v-else class="my_list_sj" @tap="jump_sq" data-url='/pages/cwsj/cwsj' :data-login='false'
+				:data-haslogin='hasLogin' src="../../static/images/cwsj_03.png" mode="widthFix"></image>
+			
+			<view class="my_li dis_flex ju_b aic" @tap="jump" data-url='/pages/my_Order_list/my_Order_list?type=1'
+				:data-login='true' :data-haslogin='hasLogin'>
 				<view>我的订单</view>
 				<text class="iconfont icon-next-m"></text>
 			</view>
-			<view class="my_li dis_flex ju_b aic"  @tap="jump" data-url='/pages/my_Order_list/my_Order_list' :data-login='true' :data-haslogin='hasLogin'>
+			<view class="my_li dis_flex ju_b aic" @tap="jump" data-url='/pages/my_Order_list/my_Order_list?type=2'
+				:data-login='true' :data-haslogin='hasLogin'>
 				<view>电话订单</view>
 				<text class="iconfont icon-next-m"></text>
 			</view>
-			<view class="my_li dis_flex ju_b aic"  @tap="jump" data-url='/pages/my_liulan/my_liulan?type=1' :data-login='true' :data-haslogin='hasLogin'>
+			<view class="my_li dis_flex ju_b aic" @tap="jump" data-url='/pages/my_liulan/my_liulan?type=1'
+				:data-login='true' :data-haslogin='hasLogin'>
 				<view>我的浏览</view>
 				<text class="iconfont icon-next-m"></text>
 			</view>
-			<view class="my_li dis_flex ju_b aic" @tap="jump" data-url='/pages/my_liulan/my_liulan?type=2' :data-login='true' :data-haslogin='hasLogin'>
+			<view class="my_li dis_flex ju_b aic" @tap="jump" data-url='/pages/my_liulan/my_liulan?type=2'
+				:data-login='true' :data-haslogin='hasLogin'>
 				<view>我的评价</view>
 				<text class="iconfont icon-next-m"></text>
 			</view>
@@ -33,12 +41,12 @@
 				<text class="iconfont icon-next-m"></text>
 			</view>
 		</view>
-    
-    
-   
+
+
+
 	</view>
-</template>  
- 
+</template>
+
 <script>
 	import Vue from 'vue'
 	import service from '../../service.js';
@@ -50,27 +58,41 @@
 	export default {
 		data() {
 			return {
-                nickname:'',
-                avatar:'',
-                status:0,
-			
+				nickname: '',
+				avatar: '',
+				status: 0,
+
 			}
 		},
 		computed: {
 			...mapState(['hasLogin', 'userName', 'loginDatas']),
 		},
 		onLoad() {
-		   
-		
-	 },
+
+
+		},
+		onPullDownRefresh() {
+			uni.stopPullDownRefresh()
+			service.wxlogin('token')
+		},
 		methods: {
-      getimg(img) {
-      	// console.log(service.getimg(img))
-      	return service.getimg(img)
-      },
+			getimg(img) {
+				// console.log(service.getimg(img))
+				return service.getimg(img)
+			},
+			jump_sq(e){
+				if(this.loginDatas.status==1){
+					uni.showToast({
+						title:'您的申请正在审核中，请勿重复申请',
+						icon:'none'
+					})
+					return
+				}
+				this.jump(e)
+			},
 			jump(e) {
 				var that = this
-			
+
 				if (that.btnkg == 1) {
 					return
 				} else {
@@ -79,21 +101,22 @@
 						that.btnkg = 0
 					}, 1000)
 				}
-			
+
 				service.jump(e)
 			},
 		},
-        
-        
+
+
 	}
 </script>
 
 <style scoped>
-	.minh100{
+	.minh100 {
 		min-height: calc(100vh - 50px - env(safe-area-inset-bottom));
 		background: #EEEEEE;
 	}
-	.my_box{
+
+	.my_box {
 		width: 100%;
 		height: 375upx;
 		background-image: url(../../static/images/my_bg_01.jpg);
@@ -102,16 +125,19 @@
 		padding: 0 30upx;
 		position: relative;
 	}
-	.my_set{
+
+	.my_set {
 		position: absolute;
 		top: 30upx;
 		right: 30upx;
 		font-size: 35upx;
 		color: #333;
 	}
-	.my_box1{
+
+	.my_box1 {
 		width: 100%;
 	}
+
 	.user_tximg {
 		width: 118upx;
 		height: 118upx;
@@ -122,34 +148,41 @@
 		flex: none;
 		margin-right: 15upx;
 	}
-	.user_name{
+
+	.user_name {
 		font-size: 36upx;
 		color: #fff;
 	}
-	.go_my{
+
+	.go_my {
 		color: #fff;
 		font-size: 30upx;
 	}
-	.my_list{
+
+	.my_list {
 		width: 100%;
 		background: #fff;
 		padding: 0 30upx;
 	}
-	.my_list_sj{
+
+	.my_list_sj {
 		width: 100%;
 		margin-bottom: 20upx;
 	}
-	.my_li{
+
+	.my_li {
 		width: 100%;
 		font-size: 30upx;
 		color: #333;
 		height: 100upx;
 	}
-	.my_li .icon-next-m{
+
+	.my_li .icon-next-m {
 		color: #999;
 		font-size: 16upx;
 	}
-	.my_li+.my_li{
+
+	.my_li+.my_li {
 		border-top: 1px solid #EEEEEE;
 	}
 </style>

@@ -5,31 +5,29 @@
 			<image class="loading_def_img" src="../../static/images/loading.gif" mode=""></image>
 		</view>
 		<view v-if="htmlReset==0">
-			<scroll-view scroll-x="true" class="scroll_x list_tit">
-				<view class="list_tit_li" :class="fw_cur==item.id?' cur':''" @tap="fwcur_fuc(item.id)"
-					v-for="(item,index) in tabs">{{item.category_name}}</view>
+			<scroll-view  scroll-x="true" class="scroll_x list_tit">
+				<view class="list_tit_li" :class="fw_cur==item.id?' cur':''" @tap="fwcur_fuc(item.id)" v-for="(item,index) in tabs">{{item.name}}</view>
 			</scroll-view>
 			<!-- <scroll-view class="scroll_list1"   scroll-y="true" refresher-enabled='true' :refresher-triggered="triggered"
 				 :refresher-threshold="100" @refresherpulling="onPulling" @refresherrefresh="onRefresh" @refresherrestore="onRestore"
 				 @refresherabort="onAbort" @scrolltolower="getdata"> -->
 			<view class="fl_list">
 				<uni-swipe-action  style="width: 750upx;">
-					<uni-swipe-action-item  v-for="(item,index) in datas"
+					<uni-swipe-action-item  v-for="(item,index) in datas" style="margin-bottom: 12upx;"
 					 :options="options" @click="onClick($event,index,item.id,item)" @change="change"  :data-id='item.id'>
 					<view class="pthz_li_padd">
-						<alLi :datas="item" :type="2"></alLi>
+						<shLi :datas="item"></shLi>
 					</view>
 					</uni-swipe-action-item>
 				</uni-swipe-action>
 				<view v-if="datas.length==0" class="data_null_box dis_flex_c aic ju_c">
-					<image class="data_null_img" src="../../static/images/data_null.png" mode="aspectFit"></image>
-					<view  class="data_null_text">暂无内容，赶紧发布一个吧</view>
+					<image class="data_null_img" src="/static/images/data_null.png" mode="aspectFit"></image>
+					<view  class="data_null_text">暂无内容</view>
 				</view>
 				<view v-if="data_last" class="data_last">我可是有底线的哟~</view>
 			</view>
 			<!-- </scroll-view> -->
-			<image  @tap="jump" data-url="/pages/my_fw_fabu/my_fw_fabu?type=about" class="my_fabu_btn" 
-			 src="/static/images/fabu_bg_03.png" mode="aspectFill"></image>
+			
 		</view>
 	</view>
 </template>
@@ -55,19 +53,15 @@
 				CustomBar: this.CustomBar,
 				htmlReset: -1,
 				tabs: [{
-						name: '高一',
+						name: '商品订单',
 						id: 1,
 					},
 					{
-						name: '高二',
+						name: '电话订单',
 						id: 2,
 					},
-					{
-						name: '高三',
-						id: 3,
-					},
 				],
-				fw_cur: 0,
+				fw_cur: 1,
 
 
 
@@ -83,18 +77,13 @@
 
 
 				options: [{
-					text: '编辑',
-					style: {
-						color: '#ffffff',
-						backgroundColor: '#FE8018'
-					}
-				}, {
 					text: '删除',
 					style: {
 						color: '#ffffff',
 						backgroundColor: '#F86060'
 					}
-				}]
+				}],
+				list_type:1
 			}
 		},
 		computed: {
@@ -133,12 +122,14 @@
 			that = this
 			that.htmlReset = 0
 
-			that.getcate()
+			
+
+			that.onRetry()
 		},
 		onShow() {
 
 			if (that.show_num > 0) {
-				that.getcate()
+				that.onRetry()
 			}
 			that.show_num++
 
@@ -161,9 +152,7 @@
 				// console.log('当前点击的是第'+e.index+'个按钮，点击内容是'+e.content.text)
 				if (e.index == 0) {
 					console.log(item)
-					uni.navigateTo({
-						url: '/pages/my_fw_fabu/my_fw_fabu?id=' + id
-					})
+					this.sc_d_fuc(id)
 				}
 				if (e.index == 1) {
 					this.sc_d_fuc(id)
@@ -176,7 +165,7 @@
 				var that = this
 				uni.showModal({
 				    title: '提示',
-				    content: '确定删除该服务吗？',
+				    content: '确定删除该记录吗？',
 				    success: function (res) {
 				        if (res.confirm) {
 				            console.log('用户点击确定');
@@ -294,7 +283,7 @@
 				var data = {}
 
 				//selectSaraylDetailByUserCard
-				var jkurl = '/content/get_shop_service_category'
+				var jkurl = '/shops/get_shop_category'
 
 				service.P_get(jkurl, data).then(res => {
 					that.btn_kg = 0
@@ -312,6 +301,7 @@
 							that.fw_cur = datas[0].id
 						}
 						that.onRetry()
+						
 
 						console.log(datas)
 
@@ -350,14 +340,16 @@
 					// token: that.$store.state.loginDatas.userToken || '',
 					page: that.page,
 					limit: that.size,
-					category_id: that.fw_cur
+					type:that.fw_cur
+					// shop_category_id: that.fw_cur
 				}
 				if (that.btn_kg == 1) {
 					return
 				}
 				that.btn_kg = 1
 				//selectSaraylDetailByUserCard
-				var jkurl = '/content/user_service_list'
+				var jkurl = '/user/shop_order'
+				
 				uni.showLoading({
 					title: '正在获取数据',
 					mask: true
@@ -367,7 +359,7 @@
 				// },1000)
 				// return
 				var page_now = that.page
-				service.P_get(jkurl, data).then(res => {
+				service.P_post(jkurl, data).then(res => {
 					that.btn_kg = 0
 					console.log(res)
 					if (res.code == 1) {
@@ -462,6 +454,7 @@
 		flex-direction: column;
 		/*  #endif  */
 		padding-top: 100upx;
+		background: #F6F6F6;
 	}
 
 	.list_tit {
@@ -516,14 +509,14 @@
 
 	.fl_list {
 		width: 100%;
-		padding: 15upx;
+		/* padding: 15upx; */
 		display: flex;
 		flex-wrap: wrap;
 	}
 
 	.pthz_li_padd {
 		width: 100%;
-		padding:0 15upx;
+		padding:30upx;
 	}
 
 

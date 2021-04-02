@@ -11,8 +11,8 @@
 				 @refresherabort="onAbort" @scrolltolower="getdata"> -->
 			<view class="fl_list">
 				<uni-swipe-action  style="width: 750upx;">
-					<uni-swipe-action-item  v-for="(item,index) in datas"
-					 :options="options" @click="onClick($event,index,item.id,item)" @change="change"  :data-id='item.id'>
+					<uni-swipe-action-item  v-for="(item,index) in datas" style="margin-bottom: 12upx;" 
+					 :options="options" @click="onClick($event,index,item.order_num,item)" @change="change"  :data-id='item.id'>
 					<view class="pthz_li_padd">
 						<shLi :datas="item"></shLi>
 					</view>
@@ -84,7 +84,8 @@
 						color: '#ffffff',
 						backgroundColor: '#F86060'
 					}
-				}]
+				}],
+				type:1
 			}
 		},
 		computed: {
@@ -123,7 +124,12 @@
 			that = this
 			that.htmlReset = 0
 
-
+			that.type=option.type
+			if(option.type==2){
+				uni.setNavigationBarTitle({
+					title:'电话订单'
+				})
+			}
 
 			that.getcate()
 		},
@@ -166,62 +172,60 @@
 				var that = this
 				uni.showModal({
 				    title: '提示',
-				    content: '确定删除该房源吗？',
+				    content: '确定删除该订单吗？',
 				    success: function (res) {
 				        if (res.confirm) {
+							//user/del_order
 				            console.log('用户点击确定');
-										var data = {
-											ids: id,
-											token: that.loginDatas.token,
-										}
-										console.log(data)
-										// return
-										//selectSaraylDetailByUserCard
-										var jkurl = '/api/my/issueDelete'
+							var datas = {
+								order_num: id,
+								// token: that.loginDatas.token,
+							}
+							console.log(datas)
+							// return
+							//selectSaraylDetailByUserCard
+							var jkurl = '/user/del_order'
+							service.P_post(jkurl, datas).then(res => {
+								that.btn_kg = 0
+								console.log(res)
+								if (res.code == 1) {
+									var datas = res.data
+									console.log(typeof datas)
+										
+									if (typeof datas == 'string') {
+										datas = JSON.parse(datas)
+									}
+									uni.showToast({
+										icon: 'none',
+										title: '操作成功'
+									})
+									setTimeout(()=>{
+										
+									that.onRetry()
+									},1000)
 										
 										
-										service.post(jkurl, data,
-											function(res) {
-										
-												// if (res.data.code == 1) {
-												if (res.data.code == 1) {
-										
-										
-										
-										
-													uni.showToast({
-														icon: 'none',
-														title: '操作成功'
-													})
-													that.page = 1
-													that.getdata()
-													that.btnkg = 0
-										
-												} else {
-													that.btnkg = 0
-													if (res.data.msg) {
-														uni.showToast({
-															icon: 'none',
-															title: res.data.msg
-														})
-													} else {
-														uni.showToast({
-															icon: 'none',
-															title: '操作失败'
-														})
-													}
-												}
-											},
-											function(err) {
-												that.btnkg = 0
-										
-												uni.showToast({
-													icon: 'none',
-													title: '获取数据失败'
-												})
-										
-											}
-										)
+								} else {
+									if (res.msg) {
+										uni.showToast({
+											icon: 'none',
+											title: res.msg
+										})
+									} else {
+										uni.showToast({
+											icon: 'none',
+											title: '操作失败'
+										})
+									}
+								}
+							}).catch(e => {
+								that.btn_kg = 0
+								console.log(e)
+								uni.showToast({
+									icon: 'none',
+									title: '获取数据失败'
+								})
+							})
 				        } else if (res.cancel) {
 				            console.log('用户点击取消');
 				        }
@@ -344,14 +348,15 @@
 					// token: that.$store.state.loginDatas.userToken || '',
 					page: that.page,
 					limit: that.size,
-					category_id: that.fw_cur
+					// category_id: that.fw_cur,
+					type:that.type
 				}
 				if (that.btn_kg == 1) {
 					return
 				}
 				that.btn_kg = 1
 				//selectSaraylDetailByUserCard
-				var jkurl = '/content/user_case_list'
+				var jkurl = '/user/my_order'
 				uni.showLoading({
 					title: '正在获取数据',
 					mask: true
@@ -509,14 +514,14 @@
 
 	.fl_list {
 		width: 100%;
-		padding: 15upx;
+		/* padding: 15upx; */
 		display: flex;
 		flex-wrap: wrap;
 	}
 
 	.pthz_li_padd {
 		width: 100%;
-		padding: 15upx;
+		padding: 30upx;
 	}
 
 

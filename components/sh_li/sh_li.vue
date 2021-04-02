@@ -1,15 +1,15 @@
 <template>
 	<view>
-		<view class="sh_li"  @tap="jump" :data-url="'/pages/dp_xq/dp_xq?id='+datas.id">
+		<view  class="sh_li"  @tap="jump" :data-url="datas.shop_id?'/pages/dp_xq/dp_xq?id='+datas.shop_id:'/pages/dp_xq/dp_xq?id='+datas.id">
 			<image class="sh_li_img" :src="getimg(datas.thumbnail_img)" mode="aspectFill"></image>
-			<view class="flex_1">
+			<view class="flex_1" style="max-width: 500upx;">
 				<view class="sh_name text-cut">{{datas.shop_name}}</view>
 				<view class="sh_box  dis_flex aic ju_b">
 					<view class="sh_box_add dis_flex aic">
 						<text class="iconfont icon-weizhi"></text>
 						<text class="text-cut ">{{datas.address}}</text>
 					</view>
-					<view class="sh_box_tel"  @tap="call" :data-tel='datas.phone'>
+					<view class="sh_box_tel"  @tap.stop="call" :data-tel='datas.phone'>
 					
 						<text class="icon-dianhua iconfont"></text>
 					</view>
@@ -21,8 +21,8 @@
 				</view>
 				<view class="sh_msg">
 					<image class="sh_img" :src="getimg(datas.logo)" mode="aspectFill"></image>
-					<view class="flex_1 text-cut">{{datas.shop_name}}</view>
-					<text class="icnfont icon-next-m"></text>
+					<view class="sh_msg_name text-cut">{{datas.shop_name}}</view>
+					<text class="iconfont icon-next-m"></text>
 				</view>
 			</view>
 		</view>
@@ -159,9 +159,12 @@
 		margin-right: 10upx;
 		flex: none;
 	}
+	.sh_msg_name{
+		width: 400upx;
+	}
 	.sh_msg text{
 		font-size: 16upx;
 		color: #999;
-		flex: none;
+		/* flex: none; */
 	}
 </style>

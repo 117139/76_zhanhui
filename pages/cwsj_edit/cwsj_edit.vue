@@ -1,7 +1,7 @@
 <template>
 	<view class="minh100">
 		<view class="box_box">
-			<image class="bpx_bg" src="../../static/images/cwsj_02.jpg" mode="widthFix"></image>
+			<!-- <image class="bpx_bg" src="../../static/images/cwsj_02.jpg" mode="widthFix"></image> -->
 			<view class="box_main">
 				<view class="box_tit">店铺名称</view>
 				<input class="box_int" type="text" v-model="datas.shop_name" placeholder="请输入店铺名称">
@@ -94,7 +94,7 @@
 					shop_name:'',        //	是	string	店铺名称
 					logo:'',             //	是	string	logo
 					thumbnail_img:'',    //	是	string	商户缩略图
-					shop_banner:'',       //	是	array	店铺背景图（一维数组）
+					banner:'',       //	是	array	店铺背景图（一维数组）
 					shop_category_id:'', //	是	string	服务类型
 					shop_type:'',        //	是	array	店铺标签（一维数组）
 					user_name:'',        //	是	string	联系人姓名
@@ -112,7 +112,7 @@
 		onLoad() {
 			that=this
 			that.getdata()
-			that.getcate()
+			
 			that.areaJson=area.area
 		},
 		methods: {
@@ -160,8 +160,8 @@
 				 var data = {}
 				 			
 				 //selectSaraylDetailByUserCard
-				 // var jkurl = '/content/get_shop_service_category'
-				 var jkurl = '/shops/get_shop_category'
+				// var jkurl = '/content/get_shop_service_category'
+				var jkurl = '/shops/get_shop_category'
 				service.P_post(jkurl, data).then(res => {
 				 	that.btn_kg = 0
 				 	console.log(res)
@@ -174,7 +174,18 @@
 				 		}
 				 			
 				 		that.array=datas
-						Vue.set(that.datas,'shop_category_id',that.array[0].id)
+						if(that.datas.shop_category_id){
+							for(var i=0;i<datas.length;i++){
+								if(datas[i].id==that.datas.shop_category_id){
+									// Vue.set(that.datas,'shop_category_id',that.array[0].id)
+									that.fw_index=i
+								}
+							}
+							console.log(that.fw_index)
+							console.log(that.array[that.fw_index])
+						}else{
+							Vue.set(that.datas,'shop_category_id',that.array[0].id)
+						}
 				 		console.log(datas)
 				 			
 				 			
@@ -205,7 +216,7 @@
 			
 			getdata(){
 				///user/residence_info
-				var jkurl="/user/residence_info"
+				var jkurl="/user/get_shop_update_info"
 				var datas={
 					token:uni.getStorageSync('token')
 				}
@@ -222,7 +233,21 @@
 						if (typeof datas == 'string') {
 							datas = JSON.parse(datas)
 						}
-						// that.datas=datas
+						that.datas=datas
+						// Vue.set(that.datas,'thumbnail_img',thum)
+						// Vue.set(that.datas,'shop_banner',shop_banne)
+						var arr=[]
+						arr.push(that.datas.logo)
+						that.sj_img=arr
+						that.sj_img2=that.datas.banner
+						// var shop_banner=JSON.parse(JSON.stringify(that.datas.banner))
+						// Vue.set(that.datas,'banner',shop_banner)
+						var shop_type=JSON.parse(JSON.stringify(that.datas.shop_type))
+						shop_type=shop_type.join('\n')
+						Vue.set(that.datas,'shop_type',shop_type)
+						Vue.set(that.datas,'shop_id',that.datas.id)
+						console.log(that.datas)
+						that.getcate()
 						if(datas.status==3){
 							if(datas.refusal_reasons){
 								uni.showToast({
@@ -236,18 +261,19 @@
 								})
 							}
 						}	
+							
 					} else {
-						// if (res.msg) {
-						// 	uni.showToast({
-						// 		icon: 'none',
-						// 		title: res.msg
-						// 	})
-						// } else {
-						// 	uni.showToast({
-						// 		icon: 'none',
-						// 		title: '操作失败'
-						// 	})
-						// }
+						if (res.msg) {
+							uni.showToast({
+								icon: 'none',
+								title: res.msg
+							})
+						} else {
+							uni.showToast({
+								icon: 'none',
+								title: '操作失败'
+							})
+						}
 					}
 				}).catch(e => {
 					that.btn_kg = 0
@@ -267,12 +293,9 @@
 					return;
 				}
 				///user/residence_info
-				var jkurl="/user/user_residence"
-				
 				var newxz=that.datas.shop_type.split(/\n/).join(',')
 				Vue.set(that.datas,'shop_type',newxz)
-				console.log(that.datas)
-				// return
+				var jkurl="/user/update_shop_info"
 				if(that.btn_kg==1){
 					return
 					
@@ -297,23 +320,9 @@
 							title:'提交成功'
 						})
 						setTimeout(function(){
-							// that.show_tk=true
-							that.datas={
-								shop_name:'',        //	是	string	店铺名称
-								logo:'',             //	是	string	logo
-								thumbnail_img:'',    //	是	string	商户缩略图
-								shop_banner:'',       //	是	array	店铺背景图（一维数组）
-								shop_category_id:'', //	是	string	服务类型
-								shop_type:'',        //	是	array	店铺标签（一维数组）
-								user_name:'',        //	是	string	联系人姓名
-								phone:'',            //	是	string	联系人电话
-								address:'',          //	是	string	店铺地址
-								lats:'',             //	是	string	经度
-								lngs:'',             //	是	string	纬度
-								detail:'',           //	是	string	店铺简介
-							}
-							that.sj_img=''
-							that.sj_img2=''
+							uni.navigateBack({
+								delta:1
+							})
 						},1000)
 							
 							
@@ -401,7 +410,7 @@
 							newdata = that.sj_img2.length
 							var shop_banne=that.sj_img2.join(',')
 							Vue.set(that.datas,'thumbnail_img',that.sj_img2[0])
-							Vue.set(that.datas,'shop_banner',shop_banne)
+							Vue.set(that.datas,'banner',shop_banne)
 							if (newdata < 9 && i < imgs.length - 1) {
 								i++
 								that.upimg1(imgs, type, i)
@@ -467,7 +476,7 @@
 								var shop_banne=that.sj_img2.join(',')
 								var thum=that.sj_img2[0]||''
 								Vue.set(that.datas,'thumbnail_img',thum)
-								Vue.set(that.datas,'shop_banner',shop_banne)
+								Vue.set(that.datas,'banner',shop_banne)
 							} else {
 								that.sj_img.splice(datas.idx, 1)
 								Vue.set(that.datas,'logo','')
@@ -487,7 +496,7 @@
 	.box_box{
 		width: 100%;
 		position: relative;
-		padding: 150upx 30upx 0;
+		padding: 10upx 30upx 0;
 		
 	}
 	.bpx_bg{

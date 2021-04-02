@@ -51,6 +51,7 @@
 	export default {
 		data() {
 			return {
+				id:'',
 				fw_list:[],
 				sj_img:[],
 				sj_img2:[],
@@ -72,10 +73,17 @@
 		computed: {
 			...mapState(['hasLogin', 'userName', 'loginDatas']),
 		},
-		onLoad() {
+		onLoad(option) {
 			that=this
-			that.getcate()
-			that.areaJson=area.area
+			if(option.id){
+				uni.setNavigationBarTitle({
+					title:'编辑服务'
+				})
+				that.id=option.id
+				that.getdata()
+			}else{
+				that.getcate()
+			}
 		},
 		methods: {
 			...mapMutations(['login','logindata','logout','setplatform']),
@@ -118,6 +126,59 @@
 					Vue.set(that.datas,'category_id',that.array[that.fw_index].id)
 				}
 			},
+			getdata(){
+				///user/residence_info
+				var jkurl="/content/get_update_info"
+				var datas={
+					id:that.id,
+					// token:uni.getStorageSync('token')
+				}
+				uni.showLoading({
+					title: '正在获取数据'
+				})
+				service.P_post(jkurl, datas).then(res => {
+					that.btn_kg = 0
+					console.log(res)
+					if (res.code == 1) {
+						var datas = res.data
+						console.log(typeof datas)
+							
+						if (typeof datas == 'string') {
+							datas = JSON.parse(datas)
+						}
+						that.datas={
+							id:datas.id,
+								title:datas.title,      //	是	string	标题
+								price:datas.price,      //	是	string	服务价格
+								category_id:datas.category_id,      //	是	string	案例类型ID
+								content:datas.content,      //	是	string	案例内容
+								thumbnail_img:datas.thumbnail_img,      //	是	string	案例缩略图
+							}
+						that.sj_img2=that.datas.thumbnail_img.split(',')
+						that.getcate()
+					} else {
+						if (res.msg) {
+							uni.showToast({
+								icon: 'none',
+								title: res.msg
+							})
+						} else {
+							uni.showToast({
+								icon: 'none',
+								title: '操作失败'
+							})
+						}
+					}
+				}).catch(e => {
+					that.btn_kg = 0
+					console.log(e)
+					uni.showToast({
+						icon: 'none',
+						title: '获取数据失败'
+					})
+				})
+			},
+			
 			getcate(){
 				 var data = {}
 				 			
@@ -136,7 +197,19 @@
 				 		}
 				 			
 				 		that.array=datas
-						Vue.set(that.datas,'category_id',that.array[0].id)
+						if(that.datas.category_id){
+							for(var i=0;i<datas.length;i++){
+								if(datas[i].id==that.datas.category_id){
+									// Vue.set(that.datas,'category_id',that.array[0].id)
+									that.fw_index=i
+								}
+							}
+							console.log(that.fw_index)
+							console.log(that.array[that.fw_index])
+						}else{
+							Vue.set(that.datas,'category_id',that.array[0].id)
+						}
+						
 				 		console.log(datas)
 				 			
 				 			
@@ -165,53 +238,13 @@
 				})
 			},
 			
-			getdata(){
-				///user/residence_info
-				var jkurl="/user/residence_info"
-				var datas={
-					token:uni.getStorageSync('token')
-				}
-				uni.showLoading({
-					title: '正在获取数据'
-				})
-				service.P_post(jkurl, datas).then(res => {
-					that.btn_kg = 0
-					console.log(res)
-					if (res.code == 1) {
-						var datas = res.data
-						console.log(typeof datas)
-							
-						if (typeof datas == 'string') {
-							datas = JSON.parse(datas)
-						}
-						that.fw_list=datas
-							
-					} else {
-						if (res.msg) {
-							uni.showToast({
-								icon: 'none',
-								title: res.msg
-							})
-						} else {
-							uni.showToast({
-								icon: 'none',
-								title: '操作失败'
-							})
-						}
-					}
-				}).catch(e => {
-					that.btn_kg = 0
-					console.log(e)
-					uni.showToast({
-						icon: 'none',
-						title: '获取数据失败'
-					})
-				})
-			},
 			sub(){
 				
 				///user/residence_info
 				var jkurl="/content/add_service"
+				if(that.id){
+					jkurl='/content/edit_content'
+				}
 				if(that.btn_kg==1){
 					return
 					

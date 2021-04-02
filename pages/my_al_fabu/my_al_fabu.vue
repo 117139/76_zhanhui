@@ -57,20 +57,29 @@
 				region: ['北京市', '北京', '东城区'],
 				areaJson:{},
 				datas:{
-					category_id:'',      //	是	string	案例类型ID
 					title:'',      //	是	string	标题
-					thumbnail_img:'',      //	是	string	案例缩略图
+					category_id:'',      //	是	string	案例类型ID
 					content:'',      //	是	string	案例内容
+					thumbnail_img:'',      //	是	string	案例缩略图
 				}
 			}
 		},
 		computed: {
 			...mapState(['hasLogin', 'userName', 'loginDatas']),
 		},
-		onLoad() {
+		onLoad(option) {
 			that=this
-			that.getcate()
-			that.areaJson=area.area
+			if(option.id){
+				uni.setNavigationBarTitle({
+					title:'编辑案例'
+				})
+				that.id=option.id
+				that.getdata()
+			}else{
+				that.getcate()
+			}
+			
+			// that.areaJson=area.area
 		},
 		methods: {
 			...mapMutations(['login','logindata','logout','setplatform']),
@@ -131,7 +140,19 @@
 				 		}
 				 			
 				 		that.array=datas
-						Vue.set(that.datas,'category_id',that.array[0].id)
+						if(that.datas.category_id){
+							for(var i=0;i<datas.length;i++){
+								if(datas[i].id==that.datas.category_id){
+									// Vue.set(that.datas,'category_id',that.array[0].id)
+									that.fw_index=i
+								}
+							}
+							console.log(that.fw_index)
+							console.log(that.array[that.fw_index])
+						}else{
+							Vue.set(that.datas,'category_id',that.array[0].id)
+						}
+						
 				 		console.log(datas)
 				 			
 				 			
@@ -162,9 +183,10 @@
 			
 			getdata(){
 				///user/residence_info
-				var jkurl="/user/residence_info"
+				var jkurl="/content/get_update_info"
 				var datas={
-					token:uni.getStorageSync('token')
+					id:that.id,
+					// token:uni.getStorageSync('token')
 				}
 				uni.showLoading({
 					title: '正在获取数据'
@@ -179,8 +201,15 @@
 						if (typeof datas == 'string') {
 							datas = JSON.parse(datas)
 						}
-						that.fw_list=datas
-							
+						that.datas={
+							id:datas.id,
+								title:datas.title,      //	是	string	标题
+								category_id:datas.category_id,      //	是	string	案例类型ID
+								content:datas.content,      //	是	string	案例内容
+								thumbnail_img:datas.thumbnail_img,      //	是	string	案例缩略图
+							}
+						that.sj_img2=that.datas.thumbnail_img.split(',')
+						that.getcate()
 					} else {
 						if (res.msg) {
 							uni.showToast({
@@ -207,6 +236,9 @@
 				
 				///user/residence_info
 				var jkurl="/content/add_case"
+				if(that.id){
+					jkurl='/content/edit_content'
+				}
 				if(that.btn_kg==1){
 					return
 					

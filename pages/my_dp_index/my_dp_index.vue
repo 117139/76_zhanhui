@@ -13,8 +13,8 @@
 			indicator-color="rgba(255,255,255,.6)" indicator-active-color="rgba(255,255,255,1)"
 		 :autoplay="autoplay" :interval="interval" :duration="duration" circular='true' :current="current_swp" @change="sweiper_change">
 				<swiper-item  v-for="(item,idx) in bannerData">
-						<!-- <image  class="swi_img" :src="getimg(item.img)" lazy-load="true" mode="aspectFill"></image> -->
-						<image  class="swi_img" src="/static/images/mydpbg_02.jpg" lazy-load="true" mode="aspectFill"></image>
+						<image  class="swi_img" :src="getimg(item)" lazy-load="true" mode="aspectFill"></image>
+						<!-- <image  class="swi_img" src="/static/images/mydpbg_02.jpg" lazy-load="true" mode="aspectFill"></image> -->
 				</swiper-item>
 				
 		</swiper>
@@ -25,28 +25,29 @@
 			
 			<view class="dis_flex aic ">
 				<view class="msg_l">
-					<view class="shop_name">DAIRY QUEEN 冰雪皇后</view>
+					<view class="shop_name">{{datas.shop_name}}</view>
 					<view class="sh_box  dis_flex aic ">
 						
-						<view class="sh_box_tel"  @tap="call" data-tel='18300000000'>
-						
-							<text class="icon-dianhua iconfont"></text>
+						<view class="sh_box_tel"  @tap="call" :data-tel='datas.phone'>
+							{{datas.phone}}
+							<!-- <text class="icon-dianhua iconfont"></text> -->
 						</view>
 						<view class="sh_box_add dis_flex aic">
 							<text class="iconfont icon-weizhi"></text>
-							<text class="text-cut ">{{'item.address'}}</text>
+							<text class=" ">{{datas.address}}
+							</text>
 						</view>
 					</view>
 				</view>
-				<image class="shop_tx" src="/static/images/mydpbg_02.jpg" mode="aspectFill"></image>
+				<image class="shop_tx" :src="getimg(datas.logo)" mode="aspectFill"></image>
 			</view>
 			<view class="dis_flex aic ju_b dp_bq">
 				<view class="pf_list">
-					<view>{{0}}分</view>
-					<text v-for="(item1,index1) in 3">{{item1}}</text>
+					<view>{{datas.avg_fraction}}分</view>
+					<text v-for="(item1,index1) in datas.shop_type">{{item1}}</text>
 					<!-- <text>插画师</text> -->
 				</view>
-				<view class="bj_btn">编辑资料</view>
+				<view class="bj_btn" @tap="jump" data-url="/pages/cwsj_edit/cwsj_edit">编辑资料</view>
 			</view>
 		</view>
 		<view class="dp_list">
@@ -74,6 +75,15 @@
 					<view class="dp_li_msg">
 						<image src="/static/images/mycase.png" mode="aspectFit"></image>
 						<view class="dis_flex aic">我的案例<text class="iconfont icon-next-m"></text></view>
+					</view>
+				</view>
+			</view>
+			<view class="dp_li_box">
+				<view class="dp_li" @tap="jump" data-url="/pages/my_order_list_sh/my_order_list_sh">
+					<image class="dp_li_bg" src="/static/images/1.png" mode="aspectFill"></image>
+					<view class="dp_li_msg">
+						<image src="/static/images/mycase.png" mode="aspectFit"></image>
+						<view class="dis_flex aic">我的订单<text class="iconfont icon-next-m"></text></view>
 					</view>
 				</view>
 			</view>
@@ -105,7 +115,8 @@
 				PageScroll:'',
 				fk_show:false,
 				current_swp:0,
-				swp_cur:0
+				swp_cur:0,
+				show_num:0
 			}
 		},
 		onPageScroll(e){
@@ -146,9 +157,65 @@
 				return style
 			}
 		},
+		onLoad() {
+			that=this
+			that.getdata()
+			
+		},
+		onShow() {
+			if(that.show_num>0){
+				that.getdata()
+			}
+			that.show_num++
+		},
 		methods: {
 			...mapMutations(['login','logindata','logout','setplatform']),
 			getdata(){
+				///user/residence_info
+				var jkurl="/user/get_user_shop_info"
+				var datas={
+					token:uni.getStorageSync('token')
+				}
+				uni.showLoading({
+					title: '正在获取数据'
+				})
+				service.P_post(jkurl, datas).then(res => {
+					that.btn_kg = 0
+					console.log(res)
+					if (res.code == 1) {
+						var datas = res.data
+						console.log(typeof datas)
+							
+						if (typeof datas == 'string') {
+							datas = JSON.parse(datas)
+						}
+						that.datas=datas
+						that.bannerData=datas.banner
+							
+					} else {
+						if (res.msg) {
+							uni.showToast({
+								icon: 'none',
+								title: res.msg
+							})
+						} else {
+							uni.showToast({
+								icon: 'none',
+								title: '操作失败'
+							})
+						}
+					}
+				}).catch(e => {
+					that.btn_kg = 0
+					console.log(e)
+					uni.showToast({
+						icon: 'none',
+						title: '获取数据失败'
+					})
+				})
+			},
+			
+			getdata1111(){
 				// /shops/get_shop_team
 				var that =this
 				var data = {
@@ -395,11 +462,13 @@
 		margin-bottom: 10upx;
 	}
 	.sh_box_tel{
-		font-size: 36upx;
+		/* font-size: 36upx; */
+		font-size: 24upx;
 		color: #555;
-		padding-right: 30upx;
+		padding-right: 15upx;
 		border-right: 1px solid #ddd;
-		margin-right: 30upx;
+		margin-right: 15upx;
+		width: 180upx;
 	}
 	.sh_box_tel .iconfont{
 		font-size: 50upx;
@@ -407,6 +476,7 @@
 		color: rgb(254, 126, 19);
 	}
 	.sh_box_add{
+		width: 380upx;
 		color: #999;
 		font-size: 26upx;
 	}

@@ -3,7 +3,7 @@
 		<view class="box_box">
 			<view class="box_main">
 				<view class="box_tit">团队简介</view>
-				<textarea class="box_content" v-model="datas.detail" placeholder="输入团队简介" />
+				<textarea class="box_content" v-model="team" placeholder="输入团队简介" />
 				<view class="box_tit">团队照片</view>
 				<view class="pz_imgs">
 					<view v-if="sj_img2.length>0" class="pz_img" v-for="(item,index) in sj_img2">
@@ -38,29 +38,10 @@
 	export default {
 		data() {
 			return {
-				fw_list:[],
-				sj_img:[],
+				team:'',
 				sj_img2:[],
-				array:[],
-				fw_index:0,
-				
-				region_id:[1, 35, 36],
-				region: ['北京市', '北京', '东城区'],
-				areaJson:{},
-				datas:{
-					shop_name:'',        //	是	string	店铺名称
-					logo:'',             //	是	string	logo
-					thumbnail_img:'',    //	是	string	商户缩略图
-					shop_banner:'',       //	是	array	店铺背景图（一维数组）
-					shop_category_id:'', //	是	string	服务类型
-					shop_type:'',        //	是	array	店铺标签（一维数组）
-					user_name:'',        //	是	string	联系人姓名
-					phone:'',            //	是	string	联系人电话
-					address:'',          //	是	string	店铺地址
-					lats:'',             //	是	string	经度
-					lngs:'',             //	是	string	纬度
-					detail:'',           //	是	string	店铺简介
-				}
+				shop_id:'',
+				datas:{}
 			}
 		},
 		computed: {
@@ -68,100 +49,15 @@
 		},
 		onLoad() {
 			that=this
-			that.getcate()
+			that.getdata()
 			that.areaJson=area.area
 		},
 		methods: {
 			...mapMutations(['login','logindata','logout','setplatform']),
-			getLocation_fuc(){
-				console.log('chooseLocation')
-				wx.chooseLocation({
-				  success: function (res) {
-				    console.log(res);
-						 
-				    
-				    // that.datas.address=res.address
-				    // that.datas.lngs=res.longitude
-				    // that.datas.lats=res.latitude
-						
-						Vue.set(that.datas,'address',res.address)
-						Vue.set(that.datas,'lngs',res.longitude)
-						Vue.set(that.datas,'lats',res.latitude)
-				  },
-				  fail: function (err) {
-				    console.log(err)
-						var res={
-							address: "北京市海淀区万柳东路31号",
-							distance: 0,
-							errMsg: "chooseLocation:ok",
-							latitude: 39.962044,
-							longitude: 116.301727,
-							name: "万柳怡水园"
-						}
-						Vue.set(that.datas,'address',res.address)
-						Vue.set(that.datas,'lngs',res.longitude)
-						Vue.set(that.datas,'lats',res.latitude)
-				  }
-				});
-			},
-			bindPickerChange(e){
-				console.log(e.currentTarget.dataset.type)
-				var datas=e.currentTarget.dataset
-				if(datas.type==1){
-					that.fw_index=e.detail.value
-					Vue.set(that.datas,'shop_category_id',that.array[that.fw_index].id)
-				}
-			},
-			getcate(){
-				 var data = {}
-				 			
-				 //selectSaraylDetailByUserCard
-				 var jkurl = '/content/get_shop_service_category'
-				
-				service.P_post(jkurl, data).then(res => {
-				 	that.btn_kg = 0
-				 	console.log(res)
-				 	if (res.code == 1) {
-				 		var datas = res.data
-				 		console.log(typeof datas)
-				 			
-				 		if (typeof datas == 'string') {
-				 			datas = JSON.parse(datas)
-				 		}
-				 			
-				 		that.array=datas
-						Vue.set(that.datas,'shop_category_id',that.array[0].id)
-				 		console.log(datas)
-				 			
-				 			
-				 	} else {
-						that.htmlReset=1
-				 		if (res.msg) {
-				 			uni.showToast({
-				 				icon: 'none',
-				 				title: res.msg
-				 			})
-				 		} else {
-				 			uni.showToast({
-				 				icon: 'none',
-				 				title: '获取失败'
-				 			})
-				 		}
-				 	}
-				}).catch(e => {
-				 	that.btn_kg = 0
-					that.htmlReset=1
-				 	console.log(e)
-				 	uni.showToast({
-				 		icon: 'none',
-				 		title: '获取数据失败'
-				 	})
-				})
-			},
-			
+			///user/get_my_team
 			getdata(){
 				///user/residence_info
-				var jkurl="/user/residence_info"
+				var jkurl="/user/get_my_team"
 				var datas={
 					token:uni.getStorageSync('token')
 				}
@@ -178,8 +74,9 @@
 						if (typeof datas == 'string') {
 							datas = JSON.parse(datas)
 						}
-						that.fw_list=datas
-							
+						that.team=datas.team
+						that.sj_img2=datas.arr_team_img
+						that.shop_id=datas.shop_id	
 					} else {
 						if (res.msg) {
 							uni.showToast({
@@ -202,22 +99,21 @@
 					})
 				})
 			},
+			
+			
 			sub(){
-				if (!that.datas.phone) {
-					uni.showToast({
-						icon: 'none',
-						title: '请输入联系人电话'
-					});
-					return;
+				var datas={
+					team:that.team,
+					team_img:that.sj_img2.join(','),
+					shop_id:that.shop_id,
 				}
-				///user/residence_info
-				var jkurl="/user/user_residence"
+				var jkurl="/user/update_my_team"
 				if(that.btn_kg==1){
 					return
 					
 				}
 				that.btn_kg=1
-				var datas=that.datas
+				
 				uni.showLoading({
 					title: '正在提交'
 				})
@@ -237,22 +133,9 @@
 						})
 						setTimeout(function(){
 							// that.show_tk=true
-							that.datas={
-								shop_name:'',        //	是	string	店铺名称
-								logo:'',             //	是	string	logo
-								thumbnail_img:'',    //	是	string	商户缩略图
-								shop_banner:'',       //	是	array	店铺背景图（一维数组）
-								shop_category_id:'', //	是	string	服务类型
-								shop_type:'',        //	是	array	店铺标签（一维数组）
-								user_name:'',        //	是	string	联系人姓名
-								phone:'',            //	是	string	联系人电话
-								address:'',          //	是	string	店铺地址
-								lats:'',             //	是	string	经度
-								lngs:'',             //	是	string	纬度
-								detail:'',           //	是	string	店铺简介
-							}
-							that.sj_img=''
-							that.sj_img2=''
+							uni.navigateBack({
+								delta:1
+							})
 						},1000)
 							
 							
@@ -282,10 +165,8 @@
 				var that = this
 				var datas = e.currentTarget.dataset
 				// 从相册选择1张图
-				var z_count = 1 - that.sj_img.length
-				if (datas.type == 2) {
-					z_count = 9 - that.sj_img2.length
-				}
+				var z_count =9 - that.sj_img2.length
+				
 				uni.showActionSheet({
 					itemList: ['拍照', '相册'],
 					success: function(res) {

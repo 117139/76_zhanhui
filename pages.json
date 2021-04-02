@@ -9,7 +9,7 @@
 			"path": "pages/my/my",
 			"style": {
 				"navigationBarTitleText": "我的",
-				"enablePullDownRefresh": false,
+				"enablePullDownRefresh": true,
 				"navigationStyle": "custom"
 			}
 
@@ -128,6 +128,24 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "我的浏览",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/cwsj_edit/cwsj_edit",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "编辑资料",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/my_order_list_sh/my_order_list_sh",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的订单",
                 "enablePullDownRefresh": true
             }
             

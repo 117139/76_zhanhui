@@ -1,11 +1,11 @@
 <template>
-	<view class="minh100">
+	<view class="minh100" :class="list_type==2?'minh1001':''">
 		<view v-if="htmlReset==1" class="zanwu" @tap='onRetry'>请求失败，请点击重试</view>
 		<view v-if="htmlReset==-1" class="loading_def">
 			<image class="loading_def_img" src="../../static/images/loading.gif" mode=""></image>
 		</view>
 		<view v-if="htmlReset==0">
-			<scroll-view  scroll-x="true" class="scroll_x list_tit">
+			<scroll-view v-if="list_type==1" scroll-x="true" class="scroll_x list_tit">
 				<view class="list_tit_li" :class="fw_cur==item.id?' cur':''" @tap="fwcur_fuc(item.id)" v-for="(item,index) in tabs">{{item.category_name}}</view>
 			</scroll-view>
 			<!-- <scroll-view class="scroll_list1"   scroll-y="true" refresher-enabled='true' :refresher-triggered="triggered"
@@ -13,7 +13,7 @@
 				 @refresherabort="onAbort" @scrolltolower="getdata"> -->
 			<view class="fl_list">
 				<uni-swipe-action  style="width: 750upx;">
-					<uni-swipe-action-item  v-for="(item,index) in datas"
+					<uni-swipe-action-item  v-for="(item,index) in datas" style="margin-bottom: 12upx;"
 					 :options="options" @click="onClick($event,index,item.id,item)" @change="change"  :data-id='item.id'>
 					<view class="pthz_li_padd">
 						<shLi :datas="item"></shLi>
@@ -176,62 +176,62 @@
 				var that = this
 				uni.showModal({
 				    title: '提示',
-				    content: '确定删除该房源吗？',
+				    content: '确定删除该记录吗？',
 				    success: function (res) {
 				        if (res.confirm) {
 				            console.log('用户点击确定');
-										var data = {
-											ids: id,
-											token: that.loginDatas.token,
-										}
-										console.log(data)
-										// return
-										//selectSaraylDetailByUserCard
-										var jkurl = '/api/my/issueDelete'
+							var datas = {
+								id: id,
+								// token: that.loginDatas.token,
+							}
+							console.log(datas)
+							// return
+							//selectSaraylDetailByUserCard
+							var jkurl = '/user/user_browse_del'
+							if(that.list_type==2){
+								jkurl="/user/del_shop_evaluate"
+							}
+							service.P_post(jkurl, datas).then(res => {
+								that.btn_kg = 0
+								console.log(res)
+								if (res.code == 1) {
+									var datas = res.data
+									console.log(typeof datas)
+										
+									if (typeof datas == 'string') {
+										datas = JSON.parse(datas)
+									}
+									uni.showToast({
+										icon: 'none',
+										title: '操作成功'
+									})
+									setTimeout(()=>{
+										
+									that.onRetry()
+									},1000)
 										
 										
-										service.post(jkurl, data,
-											function(res) {
-										
-												// if (res.data.code == 1) {
-												if (res.data.code == 1) {
-										
-										
-										
-										
-													uni.showToast({
-														icon: 'none',
-														title: '操作成功'
-													})
-													that.page = 1
-													that.getdata()
-													that.btnkg = 0
-										
-												} else {
-													that.btnkg = 0
-													if (res.data.msg) {
-														uni.showToast({
-															icon: 'none',
-															title: res.data.msg
-														})
-													} else {
-														uni.showToast({
-															icon: 'none',
-															title: '操作失败'
-														})
-													}
-												}
-											},
-											function(err) {
-												that.btnkg = 0
-										
-												uni.showToast({
-													icon: 'none',
-													title: '获取数据失败'
-												})
-										
-											}
-										)
+								} else {
+									if (res.msg) {
+										uni.showToast({
+											icon: 'none',
+											title: res.msg
+										})
+									} else {
+										uni.showToast({
+											icon: 'none',
+											title: '操作失败'
+										})
+									}
+								}
+							}).catch(e => {
+								that.btn_kg = 0
+								console.log(e)
+								uni.showToast({
+									icon: 'none',
+									title: '获取数据失败'
+								})
+							})
 				        } else if (res.cancel) {
 				            console.log('用户点击取消');
 				        }
@@ -354,14 +354,17 @@
 					// token: that.$store.state.loginDatas.userToken || '',
 					page: that.page,
 					limit: that.size,
-					category_id: that.fw_cur
+					shop_category_id: that.fw_cur
 				}
 				if (that.btn_kg == 1) {
 					return
 				}
 				that.btn_kg = 1
 				//selectSaraylDetailByUserCard
-				var jkurl = '/content/user_case_list'
+				var jkurl = '/user/get_user_browse'
+				if(that.list_type==2){
+					jkurl='/user/user_shop_evaluate'
+				}
 				uni.showLoading({
 					title: '正在获取数据',
 					mask: true
@@ -371,7 +374,7 @@
 				// },1000)
 				// return
 				var page_now = that.page
-				service.P_get(jkurl, data).then(res => {
+				service.P_post(jkurl, data).then(res => {
 					that.btn_kg = 0
 					console.log(res)
 					if (res.code == 1) {
@@ -466,8 +469,11 @@
 		flex-direction: column;
 		/*  #endif  */
 		padding-top: 100upx;
+		background: #F6F6F6;
 	}
-
+	.minh1001{
+		padding-top: 0;
+	}
 	.list_tit {
 		width: 100%;
 		padding: 0 25upx;
@@ -520,14 +526,14 @@
 
 	.fl_list {
 		width: 100%;
-		padding: 15upx;
+		/* padding: 15upx; */
 		display: flex;
 		flex-wrap: wrap;
 	}
 
 	.pthz_li_padd {
 		width: 100%;
-		padding: 15upx;
+		padding:30upx;
 	}
 
 

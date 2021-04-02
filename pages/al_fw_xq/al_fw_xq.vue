@@ -17,6 +17,8 @@
 					<view v-html="datas.content"></view>
 				</view>
 				<view class="al_footer">撰文｜{{datas.shop_name}}发布</view>
+				
+				<view v-if="datas.price" class="sub_btn" @tap="sub">下单</view>
 			</view>
 		</view>
 	</view>
@@ -51,6 +53,51 @@
 			getimg(img) {
 				// console.log(service.getimg(img))
 				return service.getimg(img)
+			},
+			sub(){
+				var jkurl="/content/buy_service"
+				var datas={
+					service_id:that.id,
+					// token:uni.getStorageSync('token')
+				}
+				uni.showLoading({
+					title: '正在获取数据'
+				})
+				service.P_post(jkurl, datas).then(res => {
+					that.btn_kg = 0
+					console.log(res)
+					if (res.code == 1) {
+						var datas = res.data
+						console.log(typeof datas)
+							
+						if (typeof datas == 'string') {
+							datas = JSON.parse(datas)
+						}
+						uni.showToast({
+							icon: 'none',
+							title: '下单成功'
+						})
+					} else {
+						if (res.msg) {
+							uni.showToast({
+								icon: 'none',
+								title: res.msg
+							})
+						} else {
+							uni.showToast({
+								icon: 'none',
+								title: '操作失败'
+							})
+						}
+					}
+				}).catch(e => {
+					that.btn_kg = 0
+					console.log(e)
+					uni.showToast({
+						icon: 'none',
+						title: '获取数据失败'
+					})
+				})
 			},
 			getdata(keyword){
 				
@@ -129,6 +176,8 @@
 	.al_time{
 		font-size: 26upx;
 		color: #999;
+		display: flex;
+		align-items: center;
 	}
 	.al_time text{
 		margin-right: 20upx;
@@ -149,5 +198,17 @@
 		font-size: 26upx;
 		margin-top: 20upx;
 		color: #999;
+	}
+	.sub_btn{
+		margin-top: 40upx;
+		width: 100%;
+		height: 88upx;
+		background: #FE8018;
+		border-radius: 44upx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 32upx;
+		color: #fff;
 	}
 </style>
