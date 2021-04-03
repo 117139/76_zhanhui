@@ -131,7 +131,7 @@
 							icon:'none',
 							title:'操作成功'
 						})
-						service.wxlogin('token')
+						service.login_tel('1')
 						setTimeout(()=>{
 							uni.navigateBack({
 								delta:1

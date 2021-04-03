@@ -296,6 +296,7 @@
 							icon:'none',
 							title:'提交成功'
 						})
+						service.login_tel('1')
 						setTimeout(function(){
 							// that.show_tk=true
 							that.datas={

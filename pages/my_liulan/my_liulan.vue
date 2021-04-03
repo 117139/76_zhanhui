@@ -16,7 +16,7 @@
 					<uni-swipe-action-item  v-for="(item,index) in datas" style="margin-bottom: 12upx;"
 					 :options="options" @click="onClick($event,index,item.id,item)" @change="change"  :data-id='item.id'>
 					<view class="pthz_li_padd">
-						<shLi :datas="item"></shLi>
+						<shLi :datas="item" :list_type="list_type"></shLi>
 					</view>
 					</uni-swipe-action-item>
 				</uni-swipe-action>

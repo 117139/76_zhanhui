@@ -245,7 +245,7 @@
 					return;
 				}
 
-				const datas = {
+				var datas = {
 					phone: that.tel,
 					code: that.code,
 					password: that.pwd,
@@ -261,6 +261,13 @@
 				}
 				if (that.login_type == -1) {
 					jkurl = '/user/forget_password'
+					datas={
+						phone: that.tel,
+						code: that.code,
+						new_password: that.pwd,
+						confirm_password: that.pwd1
+						
+					}
 					uni.showLoading({
 						title: '正在提交'
 					})

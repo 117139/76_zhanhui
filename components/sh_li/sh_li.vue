@@ -15,7 +15,8 @@
 					</view>
 				</view>
 				<view class="pf_list">
-					<view>{{datas.avg_fraction?datas.avg_fraction:0}}分</view>
+					<view v-if="list_type==2">{{datas.fraction?datas.fraction:0}}分</view>
+					<view v-else>{{datas.avg_fraction?datas.avg_fraction:0}}分</view>
 					<text v-for="(item1,index1) in datas.shop_type">{{item1}}</text>
 					<!-- <text>插画师</text> -->
 				</view>
@@ -41,6 +42,7 @@
 		name:"sh_li",
 		props: {
 			datas: '',
+			list_type:''
 		},
 		data() {
 			return {
