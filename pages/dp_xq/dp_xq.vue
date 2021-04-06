@@ -18,8 +18,8 @@
 				indicator-color="rgba(255,255,255,.6)" indicator-active-color="rgba(255,255,255,1)"
 			 :autoplay="autoplay" :interval="interval" :duration="duration" circular='true' :current="current_swp" @change="sweiper_change">
 					<swiper-item  v-for="(item,idx) in datas.banner">
-							<!-- <image  class="swi_img" :src="getimg(item)" lazy-load="true" mode="aspectFill"></image> -->
-							<image  class="swi_img" src="/static/images/mydpbg_02.jpg" lazy-load="true" mode="aspectFill"></image>
+							<image  class="swi_img" :src="getimg(item)" lazy-load="true" mode="aspectFill"></image>
+							<!-- <image  class="swi_img" src="/static/images/mydpbg_02.jpg" lazy-load="true" mode="aspectFill"></image> -->
 					</swiper-item>
 					
 			</swiper>

@@ -14,9 +14,13 @@
 			<view class="fl_list">
 				<uni-swipe-action  style="width: 750upx;">
 					<uni-swipe-action-item  v-for="(item,index) in datas" style="margin-bottom: 12upx;"
-					 :options="options" @click="onClick($event,index,item.id,item)" @change="change"  :data-id='item.id'>
+					 :options="options" @click="onClick($event,index,item.order_num,item)" @change="change"  :data-id='item.id'>
 					<view class="pthz_li_padd">
-						<shLi :datas="item"></shLi>
+						<shLi v-if="fw_cur==1" :datas="item"></shLi>
+						<view v-if="fw_cur==2" class="dl_li">
+							<image class="dl_li_img" :src="getimg(item.avatar)" mode="aspectFill"></image>
+							<view class="dl_li_name">{{item.nickname}}</view>
+						</view>
 					</view>
 					</uni-swipe-action-item>
 				</uni-swipe-action>
@@ -170,13 +174,13 @@
 				        if (res.confirm) {
 				            console.log('用户点击确定');
 							var datas = {
-								id: id,
+								order_num: id,
 								// token: that.loginDatas.token,
 							}
 							console.log(datas)
 							// return
 							//selectSaraylDetailByUserCard
-							var jkurl = '/content/del_content'
+							var jkurl = '/user/del_order'
 							service.P_post(jkurl, datas).then(res => {
 								that.btn_kg = 0
 								console.log(res)
@@ -593,5 +597,20 @@
 		position: fixed;
 		bottom: 100upx;
 		right: 30upx;
+	}
+	.dl_li{
+		width: 100%;
+		height: 100upx;
+		display: flex;
+		align-items: center;
+	}
+	.dl_li_img{
+		width: 90upx;
+		height: 90upx;
+		border-radius: 50%;
+		margin-right: 15upx;
+	}
+	.dl_li_name{
+		font-size: 32upx;
 	}
 </style>

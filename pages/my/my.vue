@@ -11,9 +11,9 @@
 			<view v-else class="user_name" @tap="jump" data-url='/pages/login/login'>登录/注册</view>
 		</view>
 		<view class="my_list">
-			<image v-if="loginDatas.status==2" class="my_list_sj" @tap="jump" data-url='/pages/my_dp_index/my_dp_index' :data-login='false'
+			<image v-if="loginDatas.status==2" class="my_list_sj" @tap="jump" data-url='/pages/my_dp_index/my_dp_index' :data-login='true'
 				:data-haslogin='hasLogin' src="../../static/images/cwsj1_03.png" mode="widthFix"></image>
-			<image v-else class="my_list_sj" @tap="jump_sq" data-url='/pages/cwsj/cwsj' :data-login='false'
+			<image v-else class="my_list_sj" @tap="jump_sq" data-url='/pages/cwsj/cwsj' :data-login='true'
 				:data-haslogin='hasLogin' src="../../static/images/cwsj_03.png" mode="widthFix"></image>
 			
 			<view class="my_li dis_flex ju_b aic" @tap="jump" data-url='/pages/my_Order_list/my_Order_list?type=1'

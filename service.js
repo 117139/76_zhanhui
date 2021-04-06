@@ -691,8 +691,17 @@ const wx_upload = function(tximg) {
 
 
 
-
-// 配置接口请求的公共方法
+/**
+ * @description    配置接口请求的公共方法
+ * @example   
+ * example   
+ * @param {String} url = ''  接口请求地址  
+ * @param {String} param = {}  接口请求参数  
+ * @param {String} header = {}  接口请求头  
+ * @param {String} method = [get|post] 可选值域包括get和post，get是直接请求，post是提交数据  
+ * @author: wenxin  
+ * @createTime: 2021-4-6 15:09:19  
+ */
 const http = ({
 	url = '',
 	param = {},
@@ -797,7 +806,15 @@ const getUrl = (url) => {
 //暴露出去调用的方法
 
 
-// get方法
+/**
+ * @description    get方法
+ * @example   
+ * example   
+ * @param {String} url = ''  接口请求地址  
+ * @param {String} param = 请求参数  
+ * @author: wenxin  
+ * @createTime: 2021-4-6 15:07:33  
+ */
 const P_get = (url, param = {}) => {
 	if (!param.load_mode) {
 		wx.showLoading({
@@ -810,7 +827,15 @@ const P_get = (url, param = {}) => {
 		method: 'GET'
 	})
 }
-
+/**
+ * @description    post方法
+ * @example   
+ * example   
+ * @param {String} url = ''  接口请求地址  
+ * @param {String} param = 请求参数  
+ * @author: wenxin  
+ * @createTime: 2021-4-6 15:07:33  
+ */
 const P_post = (url, param = {}) => {
 	return http({
 		url,
