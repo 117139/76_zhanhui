@@ -1,9 +1,9 @@
 <template>
 	<view>
-		<view  class="sh_li"  @tap="jump" :data-url="datas.shop_id?'/pages/dp_xq/dp_xq?id='+datas.shop_id:'/pages/dp_xq/dp_xq?id='+datas.id" :data-login='true' :data-haslogin='hasLogin'>
+		<view  class="sh_li"  @tap="jump" :data-url="datas.shop_id?'/pages/dp_xq/dp_xq?id='+datas.shop_id:'/pages/dp_xq/dp_xq?id='+datas.id" :data-login='false' :data-haslogin='hasLogin'>
 			<image v-if="datas.thumbnail_img" class="sh_li_img" :src="getimg(datas.thumbnail_img)" mode="aspectFill"></image>
 			<image v-else class="sh_li_img" :src="getimg(datas.shop_thumbnail_img)" mode="aspectFill"></image>
-			<view class="flex_1" style="max-width: 500upx;">
+			<view class="sh_li_msg" >
 				<view class="sh_name text-cut">{{datas.shop_name}}</view>
 				<view class="sh_box  dis_flex aic ju_b">
 					<view class="sh_box_add dis_flex aic">
@@ -95,6 +95,9 @@
 		margin-right: 15upx;
 		flex:none;
 	}
+	.sh_li_msg{
+		width: calc(100% - 220upx);
+	}
 	.sh_name{
 		width: 450upx;
 		font-size: 32upx;
@@ -163,7 +166,7 @@
 		flex: none;
 	}
 	.sh_msg_name{
-		width: 400upx;
+		width: calc(100% -  80upx);
 	}
 	.sh_msg text{
 		font-size: 16upx;

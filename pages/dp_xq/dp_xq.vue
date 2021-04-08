@@ -39,7 +39,7 @@
 							</view>
 							<view class="sh_box_add dis_flex aic">
 								<text class="iconfont icon-weizhi"></text>
-								<text class="text-cut " style="max-width: 400upx;">{{datas.address}}</text>
+								<text class="text-cut " >{{datas.address}}</text>
 							</view>
 						</view>
 					</view>
@@ -62,12 +62,21 @@
 			<view  class="dp_jj">
 				<view class="dp_miao" id="dp_jj"></view>
 				<view class="dp_tit">店铺简介</view>
-				<view class="dp_inr">		就是通过将产品的特征，优势写上去。另外再搭配上一节性的东西，如淘宝网店的介绍，店铺的介绍怎么写。这对除了要有好的产品质量，好的服务。一些细这里我们先要知道淘宝店铺要卖的是什么产品来</view>
+				<view class="dp_inr" v-html="datas_team.detail">	
+					{{datas_team.detail}}
+				</view>
 			</view>
 			<view  class="dp_jj">
 				<view class="dp_miao" id="my_team"></view>
 				<view class="dp_tit">我的团队</view>
-				<view class="dp_inr">		就是通过将产品的特征，优势写上去。另外再搭配上一节性的东西，如淘宝网店的介绍，店铺的介绍怎么写。这对除了要有好的产品质量，好的服务。一些细这里我们先要知道淘宝店铺要卖的是什么产品来</view>
+				<view class="dp_inr" v-html="datas_team.team">	
+					{{datas_team.team}}
+				</view>
+				<view class="dp_imgs">
+					<view class="dp_img_box"  v-for="(item,index) in datas_team.arr_team_img">
+						<image class="dp_img" :src="getimg(item)" :data-src="getimg(item)" mode="aspectFill" @tap="pveimg"></image>
+					</view>
+				</view>
 			</view>
 			<view  class="dp_jj">
 				<view class="dp_miao" id="dp_fw"></view>
@@ -162,6 +171,7 @@
 						id:'dp_al',
 					},
 				],
+				datas_team:'',
 				dp_cur:'dp_jj',
 				id_str:'',
 				fw_tabs:[],
@@ -172,7 +182,8 @@
 				al_cur:0,
 				al_datas:[],
 				al_page:1,
-				pj_lv:1
+				pj_lv:1,
+				show_num:0
 			}
 		},
 		onPageScroll(e){
@@ -217,6 +228,12 @@
 			that=this
 			that.id=opiton.id
 			that.getdata()
+		},
+		onShow() {
+			if(that.show_num>0){
+				that.getdata()
+			}
+			that.show_num++
 		},
 		methods: {
 			...mapMutations(['login','logindata','logout','setplatform']),
@@ -297,6 +314,9 @@
 				// console.log(service.getimg(img))
 				return service.getimg(img)
 			},
+			pveimg(e){
+				service.pveimg(e)
+			},
 			fwcur_fuc(num,type){
 				if(type==1){
 					this.dp_cur=num
@@ -360,6 +380,7 @@
 						}
 						
 						that.datas = datas
+						that.get_team()
 						that.getcate()
 						that.getcate1()
 						console.log(datas)
@@ -435,6 +456,56 @@
 					uni.showToast({
 						icon: 'none',
 						title: '获取数据失败'
+					})
+				})
+			},
+			get_team(){
+				///shops/get_shop_team
+				var data = {
+					shop_id:that.id
+				}
+				
+				//selectSaraylDetailByUserCard
+				var jkurl = '/shops/get_shop_team'
+				uni.showLoading({
+					title: '正在获取数据'
+				})
+				service.P_post(jkurl, data).then(res => {
+					that.btn_kg = 0
+					that.htmlReset=0
+					console.log(res)
+					if (res.code == 1) {
+						var datas = res.data
+						console.log(typeof datas)
+							
+						if (typeof datas == 'string') {
+							datas = JSON.parse(datas)
+						}
+						
+						that.datas_team = datas
+						
+							
+							
+					} else {
+						if (res.msg) {
+							uni.showToast({
+								icon: 'none',
+								title: res.msg
+							})
+						} else {
+							uni.showToast({
+								icon: 'none',
+								title: '操作失败'
+							})
+						}
+					}
+				}).catch(e => {
+					that.btn_kg = 0
+					that.htmlReset=1
+					console.log(e)
+					uni.showToast({
+						icon: 'none',
+						title: '获取数据失败，请检查您的网络连接'
 					})
 				})
 			},
@@ -738,7 +809,8 @@
 		height: 433upx;
 	}
 	.index_box{
-		width: 723upx;
+		/* width: 723upx; */
+		width: calc(100% - 30upx);
 		
 		background: #FFFFFF;
 		border-radius: 10px;
@@ -768,7 +840,7 @@
 		width: 24upx;
 	}
 	.msg_l{
-		width: 580upx;
+		width: calc(100% - 120upx);
 	}
 	.shop_name{
 		font-size: 38upx;
@@ -791,9 +863,14 @@
 	.sh_box_add{
 		color: #999;
 		font-size: 26upx;
+		width: calc(100% - 125upx);
 	}
 	.sh_box_add text{
 		margin-right: 8upx;
+		
+	}
+	.sh_box_add .text-cut{
+		width: calc(100% - 40upx);
 	}
 	.shop_tx{
 		width: 86upx;
@@ -928,6 +1005,21 @@
 		color: #444;
 		text-indent: 2em;
 		line-height: 45upx;
+	}
+	.dp_imgs{
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+	}
+	.dp_img_box{
+		width: 33.33%;
+		max-width: 300upx;
+		height: 240upx;
+		padding: 15upx;
+	}
+	.dp_img{
+		width: 100%;
+		height: 100%;
 	}
 	.dp_jj1{
 		width: 100%;

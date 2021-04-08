@@ -10,7 +10,7 @@
 				 :refresher-threshold="100" @refresherpulling="onPulling" @refresherrefresh="onRefresh" @refresherrestore="onRestore"
 				 @refresherabort="onAbort" @scrolltolower="getdata"> -->
 			<view class="fl_list">
-				<uni-swipe-action  style="width: 750upx;">
+				<uni-swipe-action  style="width: 100%;">
 					<uni-swipe-action-item  v-for="(item,index) in datas" style="margin-bottom: 12upx;" 
 					 :options="options" @click="onClick($event,index,item.order_num,item)" @change="change"  :data-id='item.id'>
 					<view class="pthz_li_padd">

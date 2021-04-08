@@ -16,7 +16,8 @@
 			</swiper>
 			<view class="jp_box">
 				<view class="jp_tit">
-					<view class="jp_tit_tit">精品商户</view>
+					<!-- <view class="jp_tit_tit">精品商户</view> -->
+					<view class="jp_tit_tit">推荐</view>
 					<view class="jp_tit_more" @tap="jump_more(1)">更多<text class="iconfont icon-next-m"></text></view>
 				</view>
 				<scroll-view scroll-x="true" class="jp_list_box scroll_x">
@@ -56,7 +57,8 @@
 			</view>
 			<view class="jp_box">
 				<view class="jp_tit">
-					<view class="jp_tit_tit">精品案例</view>
+					<!-- <view class="jp_tit_tit">精品案例</view> -->
+					<view class="jp_tit_tit">精选案例</view>
 					<view class="jp_tit_more" @tap="jump_more(2)">更多<text class="iconfont icon-next-m"></text></view>
 				</view>
 				<alLi v-for="(item,i) in caseList" :datas="item"></alLi>
