@@ -1006,6 +1006,9 @@
 		text-indent: 2em;
 		line-height: 45upx;
 	}
+	.dp_inr image,.dp_inr img{
+		max-width: 100%!important;
+	}
 	.dp_imgs{
 		width: 100%;
 		display: flex;

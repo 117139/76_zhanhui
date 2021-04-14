@@ -105,6 +105,16 @@ export default {
 		box-sizing: border-box;
 		font-family: PingFang SC;
 	}
+	.al_inr *{
+		max-width: 100%!important;
+	}
+	
+	.xieyi_main *{
+			 max-width: 100%!important;
+	}
+	.dp_inr *{
+			 max-width: 100%!important;
+	}
 	.dis_flex{
 		/*  #ifndef APP-PLUS-NVUE  */
 		display: flex;

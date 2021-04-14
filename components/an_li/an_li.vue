@@ -4,7 +4,9 @@
 			<view class="flex_1">
 				<view class="oh2 an_tit">{{datas.title}}</view>
 				<view class=" dis_flex aic an_time">
-					<text  v-if="datas.shop_name" class="oh1" style="max-width: 50%;">{{datas.shop_name}}发布</text>
+					<view  v-if="datas.shop_name" style="">
+						<view class="oh1">{{datas.shop_name}}发布</view>
+					</view>
 					<text  v-else >官方发布</text>
 					<text class="flex_1">{{datas.create_time}}</text>
 					<view v-if="datas.price" class="fw_pri">￥<text>{{datas.price*1}}</text></view></view>
@@ -78,6 +80,9 @@
 		font-size: 24upx;
 		color: #999;
 		margin-top: 5upx;
+	}
+	.an_time *{
+		max-width: 300upx!important;
 	}
 	.an_time text+text{
 		margin-left: 16upx;

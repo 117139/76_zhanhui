@@ -9,7 +9,7 @@
 			</view>
 			<view  class="header_L"></view>
 		</view>
-		<swiper class="swiper" :indicator-dots="indicatorDots"
+		<swiper v-if="bannerData.length>0" class="swiper" :indicator-dots="indicatorDots"
 			indicator-color="rgba(255,255,255,.6)" indicator-active-color="rgba(255,255,255,1)"
 		 :autoplay="autoplay" :interval="interval" :duration="duration" circular='true' :current="current_swp" @change="sweiper_change">
 				<swiper-item  v-for="(item,idx) in bannerData">
@@ -39,7 +39,7 @@
 						</view>
 					</view>
 				</view>
-				<image class="shop_tx" :src="getimg(datas.logo)" mode="aspectFill"></image>
+				<image v-if="datas.logo" class="shop_tx" :src="getimg(datas.logo)" mode="aspectFill"></image>
 			</view>
 			<view class="dis_flex aic ju_b dp_bq">
 				<view class="pf_list">
@@ -274,6 +274,9 @@
 			},
 			getimg(img) {
 				// console.log(service.getimg(img))
+				if(!img){
+					return
+				}
 				return service.getimg(img)
 			},
 			back(){

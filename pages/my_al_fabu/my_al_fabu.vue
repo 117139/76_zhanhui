@@ -14,8 +14,8 @@
 					</view>
 				</picker>
 				<view class="box_tit">案例内容</view>
-				<textarea class="box_content" v-model="datas.content" placeholder="请输入案例内容" />
-				<view class="box_tit">团队照片</view>
+				<textarea class="box_content" v-model="datas.content" placeholder="请输入案例内容"  maxlength="-1"/>
+				<view class="box_tit">案例照片</view>
 				<view class="pz_imgs">
 					<view v-if="sj_img2.length>0" class="pz_img" v-for="(item,index) in sj_img2">
 						<image class="img_del" src="/static/images/img_del.png" mode="aspectFill" @tap="imgdel" :data-idx="index"

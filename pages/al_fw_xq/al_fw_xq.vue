@@ -15,6 +15,13 @@
 				</view>
 				<view class="al_inr">
 					<view v-html="datas.content"></view>
+					
+				</view>
+				
+				<view v-if="datas.thumbnail_img" class="dp_imgs">
+					<view class="dp_img_box"  v-for="(item,index) in getimgarr(datas.thumbnail_img)">
+						<image class="dp_img" :src="getimg(item)" :data-src="getimg(item)" mode="aspectFill" @tap="pveimg"></image>
+					</view>
 				</view>
 				<view class="al_footer">撰文｜{{datas.shop_name}}发布</view>
 				
@@ -53,6 +60,10 @@
 			getimg(img) {
 				// console.log(service.getimg(img))
 				return service.getimg(img)
+			},
+			getimgarr(img){
+				// console.log(service.getimg(img))
+				return service.getimgarr(img)
 			},
 			sub(){
 				var jkurl="/content/buy_service"
@@ -210,5 +221,20 @@
 		justify-content: center;
 		font-size: 32upx;
 		color: #fff;
+	}
+	.dp_imgs{
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+	}
+	.dp_img_box{
+		width: 33.33%;
+		max-width: 300upx;
+		height: 240upx;
+		padding: 15upx;
+	}
+	.dp_img{
+		width: 100%;
+		height: 100%;
 	}
 </style>

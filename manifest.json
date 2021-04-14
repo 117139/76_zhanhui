@@ -79,7 +79,7 @@
         "devServer" : {
             "https" : true
         },
-        "title" : "展会",
+        "title" : "建元众利",
         "router" : {
             "mode" : "hash",
             "base" : "/zhanhui/"

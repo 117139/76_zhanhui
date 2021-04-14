@@ -38,7 +38,7 @@
 				</picker>
 				<view class="box_tit">店铺标签</view>
 				<!-- <input class="box_int" type="text" v-model="datas.shop_type" placeholder="请输入店铺标签"> -->
-				<textarea class="box_int box_textarea" value=""  v-model="datas.shop_type" placeholder="请输入店铺标签,每个标签以回车区分" />
+				<textarea class="box_int box_textarea" value=""  v-model="datas.shop_type" placeholder="请输入店铺标签,每个标签以回车区分"  maxlength="-1" />
 				<view class="box_tit">联系人姓名</view>
 				<input class="box_int" type="text" v-model="datas.user_name" placeholder="请输入联系人姓名">
 				<view class="box_tit">联系人电话</view>
@@ -61,7 +61,7 @@
 					</view>
 				
 				<view class="box_tit">店铺简介</view>
-				<textarea class="box_content" v-model="datas.detail" placeholder="" />
+				<textarea class="box_content" v-model="datas.detail" placeholder=""  maxlength="-1"/>
 				
 				<view class="sub_btn" @tap="sub">提交</view>
 			</view>
@@ -134,17 +134,17 @@
 				  },
 				  fail: function (err) {
 				    console.log(err)
-						var res={
-							address: "北京市海淀区万柳东路31号",
-							distance: 0,
-							errMsg: "chooseLocation:ok",
-							latitude: 39.962044,
-							longitude: 116.301727,
-							name: "万柳怡水园"
-						}
-						Vue.set(that.datas,'address',res.address)
-						Vue.set(that.datas,'lngs',res.longitude)
-						Vue.set(that.datas,'lats',res.latitude)
+						// var res={
+						// 	address: "北京市海淀区万柳东路31号",
+						// 	distance: 0,
+						// 	errMsg: "chooseLocation:ok",
+						// 	latitude: 39.962044,
+						// 	longitude: 116.301727,
+						// 	name: "万柳怡水园"
+						// }
+						// Vue.set(that.datas,'address',res.address)
+						// Vue.set(that.datas,'lngs',res.longitude)
+						// Vue.set(that.datas,'lats',res.latitude)
 				  }
 				});
 			},
@@ -319,6 +319,8 @@
 							
 							
 					} else {
+						var shop_type1=that.datas.shop_type.join('\n')
+						Vue.set(that.datas,'shop_type',shop_type1)
 						if (res.msg) {
 							uni.showToast({
 								icon: 'none',
@@ -333,6 +335,8 @@
 					}
 				}).catch(e => {
 					that.btn_kg = 0
+					var shop_type1=that.datas.shop_type.join('\n')
+					Vue.set(that.datas,'shop_type',shop_type1)
 					console.log(e)
 					uni.showToast({
 						icon: 'none',

@@ -3,7 +3,7 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "展会",
+				"navigationBarTitleText": "建元众利",
 				"navigationStyle": "custom"
 			}
 		}, {
@@ -163,7 +163,7 @@
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "展会",
+		"navigationBarTitleText": "建元众利",
 		"navigationBarBackgroundColor": "#fff",
 		"backgroundColor": "#F8F8F8"
 	},
