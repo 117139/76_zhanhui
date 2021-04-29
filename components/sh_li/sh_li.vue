@@ -15,10 +15,10 @@
 						<text class="icon-dianhua iconfont"></text>
 					</view>
 				</view>
-				<view class="pf_list">
-					<view v-if="list_type==2">{{datas.fraction?datas.fraction:0}}分</view>
-					<view v-else>{{datas.avg_fraction?datas.avg_fraction:0}}分</view>
-					<text v-for="(item1,index1) in datas.shop_type">{{item1}}</text>
+				<view class="pf_list oh1">
+					<view v-if="list_type==2">{{datas.fraction?getnum(datas.fraction):0}}分</view>
+					<view v-else>{{datas.avg_fraction?getnum(datas.avg_fraction):0}}分</view>
+					<text v-for="(item1,index1) in datas.shop_type" class="oh1" style="max-width: 5em;">{{item1}}</text>
 					<!-- <text>插画师</text> -->
 				</view>
 				<view class="sh_msg">
@@ -55,7 +55,14 @@
 		},
 		methods:{
 			...mapMutations(['login','logindata','logout','setplatform']),
-			
+			getnum(num){
+				if(!num){
+					return 0
+				}
+				num=num*1
+				num=num.toFixed(2)
+				return num*1
+			},
 			jump(e) {
 				var that = this
 			

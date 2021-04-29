@@ -24,25 +24,27 @@
 					<view class="jp_list">
 						<view v-for="(item,index) in shopList" :key='index' class="jp_li"  @tap="jump" :data-url="'/pages/dp_xq/dp_xq?id='+item.id">
 							<!-- 图片 -->
-							<image :src="getimg(item.thumbnail_img)" class="jp_img" mode="aspectFill"></image>
+							<image :src="getimg(item.thumbnail_img)"  lazy-load="true" class="jp_img" mode="aspectFill"></image>
 							<view class="jp_msg">
 								<!-- 标题 -->
 								<view class="jp_d1 oh2">{{item.shop_name}}</view>
 								<!-- 手机地址 -->
-								<view class="jp_d2 dis_flex aic ju_b">
+								<view class="jp_d2 dis_flex aic">
 									<text class="jp_tel" @tap.stop="call" :data-tel='item.phone'>
 										<text class="icon-dianhua iconfont"></text>
 									</text>
-									<view class="dis_flex aic jp_address" style="max-width: 240upx;">
+									<view class="dis_flex aic jp_address flex_1" style="max-width: 240upx;">
 										<text class="iconfont icon-weizhi"></text>
 										<text class="text-cut">{{item.address}}</text>
 									</view>
 								</view>
 								<!-- 标签 -->
-								
-								<view class="jp_d3">
-									<view v-for="(tag,i) in item.shop_type" :key='i' class="jp_d3_li">{{tag}}</view>
+								<view class="jp_d3 ">
+									<view v-if="i<2" v-for="(tag,i) in item.shop_type" :key='i' class="jp_d3_li">
+										<text class="oh1">{{tag}}</text>
+									</view>
 								</view>
+								
 								
 								<!-- 店铺名称 -->
 								<view class="dis_flex aic jp_dp">
@@ -438,6 +440,7 @@
 		font-size: 36upx;
 		/* color: #555; */
 		color: rgb(254, 126, 19);
+		margin-right: 5upx;
 	}
 	.jp_address{
 		font-size: 26upx;
@@ -456,9 +459,12 @@
 	.jp_d3{
 		display: flex;
 		flex-wrap: wrap;
+		height: 92upx;
+		overflow: hidden;
 	}
 	.jp_d3_li{
-		min-width: 118upx;
+		max-width: 5em;
+		/* min-width: 118upx; */
 		height: 36upx;
 		background: #FDEBDD;
 		border-radius: 4px;
